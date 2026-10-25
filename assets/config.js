@@ -24,8 +24,8 @@ window.PLATFORM_CONFIG = {
   PRICE_CAD: 59,
   PRICE_LABEL: "$59",
 
-  SUPABASE_URL: "PLACEHOLDER_SUPABASE_URL",           // e.g. https://abcd1234.supabase.co
-  SUPABASE_ANON_KEY: "PLACEHOLDER_SUPABASE_ANON_KEY", // long anon/public key from Supabase
+  SUPABASE_URL: "https://ohjowgdgvcvaaksjaqdb.supabase.co",           // e.g. https://abcd1234.supabase.co
+  SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9oam93Z2RndmN2YWFrc2phcWRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4MDczODIsImV4cCI6MjEwODM4MzM4Mn0.LB9FznxcIxbAfJrRWDtWV2p6vWLYhlVSju_X52A4rZU", // long anon/public key from Supabase
 
   STRIPE_PAYMENT_LINK: "PLACEHOLDER_STRIPE_PAYMENT_LINK", // e.g. https://buy.stripe.com/...
 
