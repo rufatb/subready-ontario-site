@@ -35,6 +35,7 @@
 <p data-payments-soon class="notice">Payments opening soon — orders submitted now are on the waitlist and no card has been charged.</p>
 <p><button class="btn brand" id="pay-btn" style="display:none">Pay $59 securely</button></p>
 <p id="report-slot"></p>
+<div id="ai-slot"></div>
 <p class="fine">Questions about a packet: email <a href="mailto:rufat.baghirov97@gmail.com">rufat.baghirov97@gmail.com</a> with your order ID. A dated document-readiness check — not insurance advice or a coverage guarantee. A certificate alone is not independently verified coverage.</p>
 </div>
 
@@ -115,6 +116,143 @@ document.getElementById("lookup").addEventListener("submit", function(e){
       b.addEventListener("click", function(){ Platform.checkout(o.id); });
     }
   } catch (e) { box.innerHTML = '<p class="fine">Could not load this order: ' + esc(e.message) + "</p>"; }
+})();
+</script>
+<script>
+/* ---- AI deep report (SubReady) ------------------------------------
+   Renders orders.ai_report, or calls the generate-report Edge Function
+   (DeepSeek) via supabase.functions.invoke. app.js does not expose its
+   Supabase client, so a second client is created from the same public
+   config — same project URL means the same stored session is used.
+   In preview mode (no live backend) the section stays hidden. */
+(function(){
+  var slot = document.getElementById("ai-slot");
+  var id = new URLSearchParams(window.location.search).get("id");
+  if (!slot || !id || !window.Platform || !Platform.supabaseReady) { return; }
+  var sevRank = { high: 0, medium: 1, low: 2 };
+  function rank(s){ return sevRank.hasOwnProperty(s) ? sevRank[s] : 1; }
+  function sevChip(s){ return "<span class='chip sev-" + esc(s) + "'>" + esc(s) + "</span>"; }
+  function fnClient(){
+    if (!window.__aiFnClient) {
+      window.__aiFnClient = window.supabase.createClient(Platform.cfg.SUPABASE_URL, Platform.cfg.SUPABASE_ANON_KEY);
+    }
+    return window.__aiFnClient;
+  }
+  function findingHtml(f){
+    return "<div class='ai-finding sev-" + esc(f.severity || "medium") + "'>" +
+      "<div class='ai-finding-head'><span class='ai-finding-title'>" + esc(f.title) + "</span><span>" +
+      (f.stamp ? "<span class='chip stamp'>" + esc(f.stamp) + "</span> " : "") + sevChip(f.severity || "medium") + "</span></div>" +
+      (f.detail ? "<p>" + esc(f.detail) + "</p>" : "") +
+      (f.recommendation ? "<p><strong>Next:</strong> " + esc(f.recommendation) + "</p>" : "") +
+      "<p class='fine'>Check: " + esc(f.reference || "Needs human review") + "</p></div>";
+  }
+  function listHtml(items){
+    return "<ul class='tight'>" + items.map(function(x){ return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>";
+  }
+  function reportHtml(rep){
+    var findings = (rep.findings || []).slice().sort(function(a, b){ return rank(a.severity) - rank(b.severity); });
+    var html = "<div class='card ai-report'><p class='sec-label'>AI deep report</p>" +
+      (rep.headline ? "<h2>" + esc(rep.headline) + "</h2>" : "") +
+      (rep.verdict ? "<p class='ai-verdict'>" + esc(rep.verdict) + "</p>" : "") +
+      (rep.summary ? "<p>" + esc(rep.summary) + "</p>" : "");
+    if (findings.length) {
+      html += "<h3 style='margin-top:20px'>Findings</h3>" + findings.map(findingHtml).join("");
+    }
+    if (rep.positives && rep.positives.length) {
+      html += "<h3 style='margin-top:20px'>What is in order</h3>" + listHtml(rep.positives);
+    }
+    if (rep.next_steps && rep.next_steps.length) {
+      html += "<h3 style='margin-top:20px'>Next steps</h3>" + listHtml(rep.next_steps);
+    }
+    if (rep.email_draft) {
+      html += "<h3 style='margin-top:20px'>Document-request email for the subcontractor</h3>" +
+        "<div class='ai-email' id='ai-email-text'>" + esc(rep.email_draft) + "</div>" +
+        "<p><button class='btn small ghost' type='button' id='ai-copy'>Copy email draft</button> <span class='fine' id='ai-copy-msg'></span></p>";
+    }
+    html += "<div class='ai-actions'><button class='btn small ghost' type='button' id='ai-regen'>Regenerate report</button>" +
+      "<span class='fine'>Regenerating replaces this draft.</span></div>" +
+      (rep.disclaimer ? "<p class='fine' style='margin-top:14px'>" + esc(rep.disclaimer) + "</p>" : "") +
+      "</div>";
+    return html;
+  }
+  function wireReport(rep){
+    var copyBtn = document.getElementById("ai-copy");
+    if (copyBtn) {
+      copyBtn.addEventListener("click", function(){
+        var msg = document.getElementById("ai-copy-msg");
+        function done(){ if (msg) { msg.textContent = "Copied."; } }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(rep.email_draft || "").then(done, function(){ fallbackCopy(); });
+        } else { fallbackCopy(); }
+        function fallbackCopy(){
+          var el = document.getElementById("ai-email-text");
+          if (!el) { return; }
+          var range = document.createRange(); range.selectNodeContents(el);
+          var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+          try { document.execCommand("copy"); done(); } catch (e) {}
+          sel.removeAllRanges();
+        }
+      });
+    }
+    var regen = document.getElementById("ai-regen");
+    if (regen) { regen.addEventListener("click", function(){ generate(true); }); }
+  }
+  function showReport(rep){
+    slot.innerHTML = reportHtml(rep);
+    wireReport(rep);
+  }
+  function showGenerate(state){
+    var failed = state === "error";
+    slot.innerHTML = "<div class='card'><p class='sec-label'>AI deep report</p>" +
+      "<h2 style='font-size:1.3rem'>A fuller draft report for this packet</h2>" +
+      "<p>Generate an AI-assisted deep report from this order's intake: the reasoning behind each stamp, what is in order, what to chase first, and a document-request email you can send the sub. It is a draft — human-reviewed before it is relied on — and it is not insurance advice or a coverage guarantee. WSIB stays UNVERIFIED until it is confirmed through a permitted official route.</p>" +
+      (failed ? "<p class='msg err-text'>The last generation attempt did not finish.</p>" : "") +
+      "<div class='ai-actions'><button class='btn brand' type='button' id='ai-gen'>" + (failed ? "Try again" : "Generate deep report") + "</button>" +
+      "<span class='fine' id='ai-gen-note'>Takes about a minute.</span></div>" +
+      "<p class='msg' id='ai-gen-msg'></p></div>";
+    document.getElementById("ai-gen").addEventListener("click", function(){ generate(false); });
+  }
+  function showGenerating(){
+    slot.innerHTML = "<div class='card'><p class='sec-label'>AI deep report</p>" +
+      "<p>This packet's deep report is generating. Refresh this page in about a minute to see it.</p>" +
+      "<div class='ai-actions'><button class='btn small ghost' type='button' id='ai-refresh'>Refresh page</button></div></div>";
+    document.getElementById("ai-refresh").addEventListener("click", function(){ window.location.reload(); });
+  }
+  async function errText(err){
+    try {
+      if (err && err.context && typeof err.context.json === "function") {
+        var j = await err.context.json();
+        if (j && j.error) { return j.error; }
+      }
+    } catch (e) {}
+    return (err && err.message) || "Generation failed. Try again.";
+  }
+  async function generate(force){
+    var btn = document.getElementById("ai-gen") || document.getElementById("ai-regen");
+    var msg = document.getElementById("ai-gen-msg");
+    if (btn) { btn.disabled = true; btn.textContent = "Generating — this takes about a minute…"; }
+    if (msg) { msg.textContent = "Working from this order's intake. Keep this page open."; msg.className = "msg"; }
+    try {
+      var res = await fnClient().functions.invoke("generate-report", { body: { order_id: id, force: !!force } });
+      if (res.error) { throw new Error(await errText(res.error)); }
+      var data = res.data || {};
+      if (!data.ok || !data.report) { throw new Error(data.error || "Generation failed. Try again."); }
+      showReport(data.report);
+    } catch (e) {
+      if (msg) { msg.textContent = e.message; msg.className = "msg err-text"; }
+      if (btn) { btn.disabled = false; btn.textContent = "Try again"; }
+    }
+  }
+  (async function(){
+    try {
+      var o = await Platform.getOrder(id);
+      if (!o) { return; }
+      var st = o.ai_status || "none";
+      if (st === "ready" && o.ai_report) { showReport(o.ai_report); }
+      else if (st === "generating") { showGenerating(); }
+      else { showGenerate(st); }
+    } catch (e) { /* order not viewable (signed out / not owner) — the main panel already explains */ }
+  })();
 })();
 </script>
 </body></html>

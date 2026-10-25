@@ -59,6 +59,13 @@ function chipClass(s){
   if (s === "needs_info" || s === "pending_payment") { return "chip flag"; }
   return "chip";
 }
+function aiLine(o){
+  var st = o.ai_status || "none";
+  if (st === "ready") { return "ready — <a href='status.html?id=" + encodeURIComponent(o.id) + "'>view deep report</a>"; }
+  if (st === "generating") { return "generating"; }
+  if (st === "error") { return "generation failed — open the status page to retry"; }
+  return "not generated";
+}
 (async function(){
   var user = await Platform.currentUser();
   var who = document.getElementById("who"), box = document.getElementById("orders");
@@ -84,6 +91,7 @@ function chipClass(s){
         "<div class='oc-name'>" + esc(name) + "</div>" +
         "<div class='oc-meta'>" + sub + esc(o.product || "") + " · Submitted " + new Date(o.created_at).toLocaleDateString() + "</div>" +
         "<div class='oc-meta'>Reference <span class='refcode'>" + esc(String(o.id).replace(/[^a-zA-Z0-9]/g, "").slice(0, 8).toUpperCase()) + "</span></div>" +
+        "<div class='oc-meta'>Deep report: " + aiLine(o) + "</div>" +
         "</div><div class='oc-side'>" +
         "<div class='oc-price'>CAD $" + esc(o.price_cad) + "</div>" +
         "<p style='margin:8px 0'><span class='" + chipClass(o.status) + "'>" + esc(o.status) + "</span></p>" +
