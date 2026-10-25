@@ -207,3 +207,25 @@ input[aria-invalid="true"],select[aria-invalid="true"],textarea[aria-invalid="tr
 .success{border:1px solid var(--brand);border-radius:10px;background:var(--paper);padding:26px}
 .success h2{font-size:1.4rem}
 .ok-item .ft{font-weight:600}
+
+/* ================= AI deep report (added 2026-10-25) =================
+   Used by status.html (deep-report rendering + generate states) and the
+   dashboard "Deep report" line. Appended only — no existing rules
+   were changed. */
+.ai-report h2{font-size:1.45rem}
+.ai-verdict{font-weight:600;border-left:3px solid var(--brand);padding:6px 0 6px 14px;margin:0 0 14px}
+.ai-finding{border:1px solid var(--line);border-left:3px solid var(--line2);border-radius:8px;
+  padding:14px 16px;margin:0 0 12px;background:var(--bg)}
+.ai-finding.sev-high{border-left-color:#A52A0A}
+.ai-finding.sev-medium{border-left-color:var(--brand)}
+.ai-finding.sev-low{border-left-color:var(--line2)}
+.ai-finding-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:6px;flex-wrap:wrap}
+.ai-finding-title{font-weight:600}
+.ai-finding p{margin:0 0 6px;font-size:.95rem}
+.ai-finding p:last-child{margin-bottom:0}
+.chip.sev-high{background:#F3D2C2;color:#8C3A0B}
+.chip.sev-medium{background:var(--flag-bg);color:var(--flag-ink)}
+.chip.sev-low{background:var(--pass-bg);color:var(--pass-ink)}
+.ai-email{white-space:pre-wrap;background:var(--paper);border:1px solid var(--line);
+  border-radius:8px;padding:14px 16px;font-size:.93rem;line-height:1.6;margin:0 0 10px}
+.ai-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px}
