@@ -1,35 +1,60 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Order a readiness packet — SubReady Ontario</title>
+<title>Start a readiness packet — SubReady Ontario</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css"></head>
 <body><div class="wrap">
-<header class="site"><a class="logo" href="index.html">SubReady Ontario</a>
-<nav><a href="dashboard.html">Dashboard</a><a href="login.html">Log in</a></nav></header>
+
+<header class="site">
+<a class="wordmark" href="index.html"><svg class="mark" width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect width="26" height="26" rx="5" fill="#D95D0F"/><path d="M8 9h10M8 13h10M8 17h6" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg><span class="name">SubReady Ontario</span></a>
+<nav class="main">
+<a href="index.html#how">How it works</a>
+<a href="index.html#sample">Sample packet</a>
+<a href="index.html#pricing">Pricing</a>
+<a href="index.html#faq">FAQ</a>
+<a href="login.html">Sign in</a>
+<a class="btn small" href="order.html">Start</a>
+</nav></header>
 
 <div id="mode-banner" class="banner" style="display:none"></div>
-<h1 style="font-size:1.6rem">Subcontractor readiness intake — one sub, $59</h1>
-<p class="fine">Enter what YOUR contract requires (nothing is assumed about your trade or project), then what the sub has actually provided. Statuses use the evidence vocabulary from your report: MET_FROM_DOCUMENT · MISSING · MISMATCH · EXPIRED · NOT_APPLICABLE · UNVERIFIED · REVIEW_REQUIRED. “Independently verified” is never self-selected — SubReady sets it only after a separate permitted confirmation.</p>
 
-<form id="intake">
-<div class="card"><h2>Your company &amp; project</h2>
+<div style="max-width:820px">
+<p class="sec-label" style="margin-top:40px">Order</p>
+<h1 style="font-size:2rem">Subcontractor readiness intake — one sub, $59</h1>
+<p class="lede" style="font-size:1.02rem">Enter what your contract requires — nothing is assumed about your trade or project — then what the sub has actually provided. Document statuses use the packet vocabulary: MET_FROM_DOCUMENT · MISSING · MISMATCH · EXPIRED · NOT_APPLICABLE · UNVERIFIED · REVIEW_REQUIRED. "Independently verified" is never self-selected; SubReady sets it only after a separate permitted confirmation.</p>
+
+<ol class="progress" id="progress">
+<li class="cur" data-p="1"><span class="n">1</span><span class="lbl">Your details</span></li>
+<li data-p="2"><span class="n">2</span><span class="lbl">The sub &amp; documents</span></li>
+<li data-p="3"><span class="n">3</span><span class="lbl">Review</span></li>
+</ol>
+
+<form id="intake" novalidate>
+<div class="steppane on" data-pane="1">
+<div class="card"><h2 style="font-size:1.3rem">Your company and project</h2>
 <div class="grid">
-<div><label for="gc_company">GC company (legal name) *</label><input id="gc_company" required></div>
-<div><label for="contact_name">Contact name *</label><input id="contact_name" required></div>
-<div><label for="contact_email">Contact email *</label><input id="contact_email" type="email" required></div>
-<div><label for="project">Project name / nickname *</label><input id="project" required></div>
+<div><label for="gc_company">GC company (legal name) <span class="req">*</span></label><input id="gc_company"></div>
+<div><label for="contact_name">Contact name <span class="req">*</span></label><input id="contact_name" autocomplete="name"></div>
+<div><label for="contact_email">Contact email <span class="req">*</span></label><input id="contact_email" type="email" autocomplete="email"></div>
+<div><label for="project">Project name / nickname <span class="req">*</span></label><input id="project"></div>
 <div><label for="start_date">Anticipated start date</label><input id="start_date" type="date"></div>
 <div><label for="end_date">Anticipated end date</label><input id="end_date" type="date"></div>
 </div></div>
+<div class="stepnav"><span></span><button class="btn brand" type="button" data-next>Continue</button></div>
+</div>
 
-<div class="card"><h2>Subcontractor</h2>
+<div class="steppane" data-pane="2">
+<div class="card"><h2 style="font-size:1.3rem">Subcontractor</h2>
 <div class="grid">
-<div><label for="sub_company">Subcontractor company (legal name) *</label><input id="sub_company" required></div>
-<div><label for="sub_trade">Trade *</label><input id="sub_trade" required placeholder="e.g. electrical, roofing, HVAC"></div>
+<div><label for="sub_company">Subcontractor company (legal name) <span class="req">*</span></label><input id="sub_company"></div>
+<div><label for="sub_trade">Trade <span class="req">*</span></label><input id="sub_trade" placeholder="e.g. electrical, roofing, HVAC"></div>
 <div><label for="sub_contact">Sub contact (name/email, if known)</label><input id="sub_contact"></div>
 <div><label for="trade_licence">Trade licence applies to this sub?</label><select id="trade_licence"><option>Not applicable</option><option>Yes — will provide</option><option>Unsure — review required</option></select></div>
 </div></div>
 
-<div class="card"><h2>Your contract's insurance requirements</h2>
+<div class="card"><h2 style="font-size:1.3rem">Your contract's insurance requirements</h2>
 <div class="grid">
 <div><label for="req_gl_occurrence">CGL limit per occurrence (e.g. $2,000,000)</label><input id="req_gl_occurrence"></div>
 <div><label for="req_gl_aggregate">CGL general aggregate (e.g. $5,000,000)</label><input id="req_gl_aggregate"></div>
@@ -38,44 +63,140 @@
 <div><label for="req_waiver">Waiver of subrogation required?</label><select id="req_waiver"><option>No</option><option>Yes</option></select></div>
 <div><label for="req_wsib">WSIB clearance required?</label><select id="req_wsib"><option>Yes</option><option>No</option><option>Scope review (possible home-renovation exception)</option></select></div>
 </div>
-<label for="req_notes">Other contract insurance terms / clause text</label><textarea id="req_notes"></textarea>
+<label for="req_notes">Other contract insurance terms / clause text — including a note here if this order is part of a $99 3-pack</label><textarea id="req_notes"></textarea>
 </div>
 
-<div class="card"><h2>Documents provided by the sub</h2>
-<p class="fine">For each document: whether you have it, its key dates, and its status <i>as far as the document itself shows</i>. Anything not yet officially confirmed stays UNVERIFIED.</p>
-<table>
-<tr><th>Document</th><th>Have it?</th><th>Expiry / details</th><th>Status from document</th></tr>
-<tr><td>Certificate of Insurance (COI)</td>
+<div class="card"><h2 style="font-size:1.3rem">Documents provided by the sub</h2>
+<p class="fine">For each document: whether you have it, its key dates, and its status as far as the document itself shows. Anything not yet officially confirmed stays UNVERIFIED.</p>
+<table class="spec" style="margin-top:12px">
+<thead><tr><th>Document</th><th>Have it?</th><th>Expiry / details</th><th>Status from document</th></tr></thead>
+<tbody>
+<tr><th class="row">Certificate of Insurance (COI)</th>
 <td><select id="doc_coi_have"><option value="no">No</option><option value="yes">Yes</option></select></td>
 <td><input id="doc_coi_expiry" type="date" aria-label="COI expiry date"></td>
 <td><select id="doc_coi_status"><option>UNVERIFIED</option><option>MET_FROM_DOCUMENT</option><option>MISMATCH</option><option>EXPIRED</option><option>REVIEW_REQUIRED</option></select></td></tr>
-<tr><td>Additional insured endorsement</td>
+<tr><th class="row">Additional insured endorsement</th>
 <td><select id="doc_end_have"><option value="no">No</option><option value="yes">Yes</option></select></td>
 <td><input id="doc_end_detail" placeholder="Endorsement names your company?"></td>
 <td><select id="doc_end_status"><option>MISSING</option><option>MET_FROM_DOCUMENT</option><option>MISMATCH</option><option>UNVERIFIED</option><option>NOT_APPLICABLE</option><option>REVIEW_REQUIRED</option></select></td></tr>
-<tr><td>WSIB clearance certificate</td>
+<tr><th class="row">WSIB clearance certificate</th>
 <td><select id="doc_wsib_have"><option value="no">No</option><option value="yes">Yes</option></select></td>
-<td><input id="doc_wsib_detail" placeholder="Clearance # / validity dates"></td>
+<td><input id="doc_wsib_detail" placeholder="Clearance number / validity dates"></td>
 <td><select id="doc_wsib_status"><option>UNVERIFIED</option><option>MISSING</option><option>EXPIRED</option><option>REVIEW_REQUIRED</option></select></td></tr>
-</table>
-<label for="docs_note">Document file names / how you'll send them</label>
-<input id="docs_note" placeholder="e.g. COI-acme-electrical.pdf — uploads open with the live platform">
-<p class="fine">Uploads switch on with the live platform (private Supabase Storage bucket “documents”, per-user folders, expiring links). Never send documents you are not authorized to share.</p>
-<label style="font-weight:400"><input type="checkbox" id="truthful" required style="width:auto"> I confirm the requirements and document details submitted are accurate to the best of my knowledge, and I understand the final hire/start decision is mine. *</label>
+</tbody></table>
+<label for="docs_note">Document file names / how you will send them</label>
+<input id="docs_note" placeholder="e.g. COI-acme-electrical.pdf — uploads open with a private link after submission">
+<p class="fine">Uploads open through a private link after submission (private storage, per-user folders, expiring links). Never send documents you are not authorized to share.</p>
+</div>
+<div class="stepnav"><button class="btn ghost" type="button" data-back>Back</button><button class="btn brand" type="button" data-next>Continue to review</button></div>
 </div>
 
-<p data-payments-soon class="notice">Payments opening soon — submitting joins the list for this packet at $59. No card is taken today.</p>
-<p><button class="cta" type="submit">Submit intake</button></p>
-<p id="form-msg" class="fine"></p>
+<div class="steppane" data-pane="3">
+<div class="card"><h2 style="font-size:1.3rem">Review before you submit</h2>
+<div id="review"></div>
+</div>
+<p data-payments-soon class="notice">Payments opening soon — submitting joins the list for this packet at $59. No card is taken today; we email the payment link when checkout opens.</p>
+<p data-payments-live style="display:none" class="notice">Submitting saves the intake and takes you to secure card checkout for $59. The packet starts once payment is confirmed.</p>
+<label class="check"><input type="checkbox" id="truthful"> <span>I confirm the requirements and document details submitted are accurate to the best of my knowledge, and I understand the final hire/start decision is mine. <span class="req">*</span></span></label>
+<p class="err" id="err-truthful"></p>
+<div class="stepnav"><button class="btn ghost" type="button" data-back>Back</button><button class="btn brand" type="submit" id="submit-btn">Submit intake</button></div>
+<p id="form-msg" class="msg"></p>
+</div>
 </form>
 
-<p class="fine">A dated document-readiness check. Not insurance advice or a coverage guarantee. A WSIB clearance number on a document is UNVERIFIED until checked through a permitted official route — we never scrape or bypass WSIB/registry logins or CAPTCHAs.</p>
+<div id="success" style="display:none"></div>
+
+<p class="fine" style="margin-top:26px">A dated document-readiness check. Not insurance advice or a coverage guarantee. A WSIB clearance number on a document is UNVERIFIED until checked through a permitted official route — we never scrape or bypass WSIB or registry logins or CAPTCHAs. Money back if we cannot complete your check — not because the packet finds gaps.</p>
+</div>
+
+<footer class="site">
+<p class="fname">SubReady Ontario</p>
+<p>A service of Banriq IQ — sole proprietorship, Richmond Hill, Ontario. Contact: <a href="mailto:rufat.baghirov97@gmail.com">rufat.baghirov97@gmail.com</a></p>
+<p>SubReady Ontario provides a dated document-readiness check. It is not insurance advice, a coverage guarantee, or insurance verification; a certificate of insurance alone is never treated as independently verified coverage.</p>
+<p>Not an insurer, broker, or WSIB.</p>
+</footer>
+
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/config.js"></script>
 <script src="assets/app.js"></script>
 <script>
 function v(id){ return document.getElementById(id).value.trim(); }
+function markErr(id, text){
+  var f = document.getElementById(id); if (!f) { return; }
+  var e = f.parentNode.querySelector(".err[data-for='" + id + "']");
+  if (!e) { e = document.createElement("p"); e.className = "err"; e.setAttribute("data-for", id); f.parentNode.appendChild(e); }
+  if (text) { f.setAttribute("aria-invalid", "true"); e.textContent = text; e.classList.add("on"); }
+  else { f.removeAttribute("aria-invalid"); e.textContent = ""; e.classList.remove("on"); }
+}
+function need(id, msgText){
+  if (!v(id)) { markErr(id, msgText); return false; }
+  markErr(id, ""); return true;
+}
+var current = 1;
+function showStep(n){
+  current = n;
+  document.querySelectorAll(".steppane").forEach(function(p){
+    p.classList.toggle("on", Number(p.getAttribute("data-pane")) === n);
+  });
+  document.querySelectorAll("#progress li").forEach(function(li){
+    var p = Number(li.getAttribute("data-p"));
+    li.classList.toggle("cur", p === n);
+    li.classList.toggle("done", p < n);
+  });
+  if (n === 3) { buildReview(); }
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+function validateStep(n){
+  var ok = true, firstBad = null;
+  function chk(id, t){ if (!need(id, t)) { ok = false; if (!firstBad) { firstBad = id; } } }
+  if (n === 1) {
+    chk("gc_company", "Enter your company's legal name.");
+    chk("contact_name", "Enter the contact name.");
+    chk("project", "Enter the project name or nickname.");
+    if (!v("contact_email")) { chk("contact_email", "Enter a contact email."); }
+    else if (v("contact_email").indexOf("@") < 1) { markErr("contact_email", "That email address does not look complete."); ok = false; firstBad = firstBad || "contact_email"; }
+    else { markErr("contact_email", ""); }
+  }
+  if (n === 2) {
+    chk("sub_company", "Enter the subcontractor's legal company name.");
+    chk("sub_trade", "Enter the sub's trade.");
+  }
+  if (firstBad) { document.getElementById(firstBad).focus(); }
+  return ok;
+}
+document.querySelectorAll("[data-next]").forEach(function(b){
+  b.addEventListener("click", function(){ if (validateStep(current)) { showStep(current + 1); } });
+});
+document.querySelectorAll("[data-back]").forEach(function(b){
+  b.addEventListener("click", function(){ showStep(current - 1); });
+});
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+function row(label, val){ return "<tr><th>" + label + "</th><td>" + (val ? esc(val) : "<span class='fine'>Not provided</span>") + "</td></tr>"; }
+function docSummary(have, detail, status){
+  var h = v(have) === "yes";
+  var s = h ? v(status) : (v(status) === "NOT_APPLICABLE" ? "NOT_APPLICABLE" : "MISSING");
+  return (h ? "Provided" : "Not provided") + " · status: " + s + (v(detail) ? " · " + v(detail) : "");
+}
+function buildReview(){
+  var html = "<table class='plain'>" +
+    row("GC company", v("gc_company")) + row("Contact", v("contact_name") + " · " + v("contact_email")) +
+    row("Project", v("project")) + row("Project dates", (v("start_date") || "—") + " to " + (v("end_date") || "—")) +
+    row("Subcontractor", v("sub_company")) + row("Trade", v("sub_trade")) + row("Sub contact", v("sub_contact")) +
+    row("Trade licence", v("trade_licence")) +
+    row("CGL per occurrence required", v("req_gl_occurrence")) + row("CGL aggregate required", v("req_gl_aggregate")) +
+    row("Certificate holder required", v("req_cert_holder")) +
+    row("Additional insured required", v("req_addl_insured")) + row("Waiver of subrogation required", v("req_waiver")) +
+    row("WSIB clearance required", v("req_wsib")) + row("Other contract terms", v("req_notes")) +
+    row("COI", docSummary("doc_coi_have", "doc_coi_expiry", "doc_coi_status")) +
+    row("Endorsement", docSummary("doc_end_have", "doc_end_detail", "doc_end_status")) +
+    row("WSIB clearance", docSummary("doc_wsib_have", "doc_wsib_detail", "doc_wsib_status")) +
+    row("Documents note", v("docs_note")) +
+    "</table>" +
+    "<p class='fine' style='margin-top:12px'>Price: CAD $59, one-off, for one subcontractor on one project. Standard turnaround 2 business days from a complete submission.</p>";
+  document.getElementById("review").innerHTML = html;
+}
+function shortRef(id){ return String(id || "").replace(/[^a-zA-Z0-9]/g, "").slice(0, 8).toUpperCase(); }
 function docRow(have, detail, status){
   var h = v(have);
   return { provided: h === "yes", detail: v(detail), status: h === "yes" ? v(status) : (v(status) === "NOT_APPLICABLE" ? "NOT_APPLICABLE" : "MISSING") };
@@ -83,6 +204,14 @@ function docRow(have, detail, status){
 document.getElementById("intake").addEventListener("submit", async function(e){
   e.preventDefault();
   var msg = document.getElementById("form-msg");
+  if (!validateStep(1) || !validateStep(2)) {
+    msg.textContent = "A required field in an earlier step is empty. Use Back to review the steps."; msg.className = "msg err-text"; return;
+  }
+  var te = document.getElementById("err-truthful");
+  if (!document.getElementById("truthful").checked) {
+    te.textContent = "Confirm the statement above before submitting."; te.classList.add("on"); return;
+  }
+  te.textContent = ""; te.classList.remove("on");
   var intake = {
     gc_company: v("gc_company"), contact_name: v("contact_name"), contact_email: v("contact_email"),
     project: v("project"), start_date: v("start_date"), end_date: v("end_date"),
@@ -104,16 +233,42 @@ document.getElementById("intake").addEventListener("submit", async function(e){
     truthfulness_confirmed: document.getElementById("truthful").checked
   };
   intake.documents.coi.expiry_date = v("doc_coi_expiry");
+  var btn = document.getElementById("submit-btn");
+  btn.disabled = true; msg.textContent = "Saving your intake…"; msg.className = "msg";
   try {
     var order = await Platform.createOrder(intake);
     if (Platform.paymentsReady) {
       msg.textContent = "Intake saved. Taking you to secure checkout…";
-      if (!Platform.checkout(order.id)) { msg.textContent = "Intake saved. Checkout could not open — see status page."; }
+      if (Platform.checkout(order.id)) { return; }
+      showSuccess(order, "payment");
     } else {
-      msg.innerHTML = "You are on the list for this packet. We will email the $59 payment link when checkout opens. " +
-        'Track it here: <a href="status.html?id=' + encodeURIComponent(order.id) + '">order status</a>.';
+      showSuccess(order, "waitlist");
     }
-  } catch (err) { msg.textContent = "Could not save: " + err.message; }
+  } catch (err) {
+    msg.textContent = "Could not save: " + err.message; msg.className = "msg err-text"; btn.disabled = false;
+  }
 });
+function showSuccess(order, kind){
+  document.getElementById("intake").style.display = "none";
+  document.getElementById("progress").style.display = "none";
+  var box = document.getElementById("success");
+  var statusUrl = "status.html?id=" + encodeURIComponent(order.id);
+  var next = kind === "waitlist"
+    ? "<p>You are on the list for this packet at $59. No card has been taken. When checkout opens, we email the payment link to <strong>" + esc(v("contact_email")) + "</strong>, and the packet starts once payment is confirmed.</p>"
+    : "<p>Your intake is saved and marked as awaiting payment. If checkout did not open, use the Pay button on the status page.</p>";
+  box.innerHTML = "<div class='success'><p class='sec-label'>Intake received</p>" +
+    "<h2>Order reference <span class='refcode'>" + shortRef(order.id) + "</span></h2>" +
+    next +
+    "<h3 style='margin-top:18px'>What happens next</h3>" +
+    "<ol class='steps'>" +
+    "<li><div><h3>Comparison</h3><p>Each requirement is compared with the documents on file and stamped — met from document, missing, mismatch, expired, or unverified. Standard turnaround is 2 business days from a complete submission.</p></div></li>" +
+    "<li><div><h3>Open items</h3><p>If documents are outstanding, the packet lists them with the exact request wording to send the sub or their broker.</p></div></li>" +
+    "<li><div><h3>Packet delivered</h3><p>The dated packet and evidence index are delivered to your account, and the order status moves to report ready.</p></div></li>" +
+    "</ol>" +
+    "<div class='btnrow'><a class='btn brand' href='" + statusUrl + "'>Track this order</a><a class='btn ghost' href='dashboard.html'>Go to your dashboard</a></div>" +
+    "<p class='fine'>Keep the full order ID for support: <span class='refcode'>" + esc(order.id) + "</span></p></div>";
+  box.style.display = "";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
 </script>
 </body></html>

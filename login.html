@@ -1,54 +1,131 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Log in / Sign up — SubReady Ontario</title>
+<title>Sign in — SubReady Ontario</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css"></head>
 <body><div class="wrap">
-<header class="site"><a class="logo" href="index.html">SubReady Ontario</a>
-<nav><a href="order.html">Order</a><a href="dashboard.html">Dashboard</a></nav></header>
+
+<header class="site">
+<a class="wordmark" href="index.html"><svg class="mark" width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect width="26" height="26" rx="5" fill="#D95D0F"/><path d="M8 9h10M8 13h10M8 17h6" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg><span class="name">SubReady Ontario</span></a>
+<nav class="main">
+<a href="index.html#how">How it works</a>
+<a href="index.html#sample">Sample packet</a>
+<a href="index.html#pricing">Pricing</a>
+<a href="index.html#faq">FAQ</a>
+<a href="login.html">Sign in</a>
+<a class="btn small" href="order.html">Start</a>
+</nav></header>
 
 <div id="mode-banner" class="banner" style="display:none"></div>
 
-<div class="card">
-<h1 style="font-size:1.5rem">Log in or create an account</h1>
-<form id="auth-form">
-<label for="name">Full name (new accounts)</label>
+<div style="max-width:520px;margin:44px auto 0">
+<p class="sec-label">Your account</p>
+<h1 style="font-size:1.9rem" id="auth-title">Sign in</h1>
+<p class="fine" style="margin-bottom:18px">Your orders and reports are tied to this account. Submissions are visible only to you, enforced by database row-level security.</p>
+
+<div class="btnrow" role="tablist" aria-label="Sign in or create an account" style="margin-top:0">
+<button class="btn small" type="button" id="tab-in">Sign in</button>
+<button class="btn small ghost" type="button" id="tab-up">Create account</button>
+</div>
+
+<div class="card" style="margin-top:10px">
+<form id="auth-form" novalidate>
+<div id="signup-fields" style="display:none">
+<label for="name">Full name</label>
 <input id="name" autocomplete="name">
-<label for="company">GC company (new accounts)</label>
+<label for="company">GC company</label>
 <input id="company" autocomplete="organization">
+</div>
 <label for="email">Email</label>
 <input id="email" type="email" required autocomplete="email">
+<p class="err" id="err-email"></p>
 <label for="password">Password</label>
 <input id="password" type="password" required autocomplete="current-password">
-<p><button class="cta" type="submit" id="signin-btn">Log in</button>
-<button class="cta secondary" type="button" id="signup-btn">Create account</button></p>
-<p id="auth-msg" class="fine"></p>
+<p class="err" id="err-password"></p>
+<p style="margin-top:20px"><button class="btn brand" type="submit" id="submit-btn" style="width:100%">Sign in</button></p>
+<p id="auth-msg" class="msg"></p>
 </form>
 </div>
-<p class="fine">One account per customer. Your submissions are visible only to you (enforced by database row-level security once live).</p>
+<p class="fine">One account per customer. Questions about an order: email <a href="mailto:rufat.baghirov97@gmail.com">rufat.baghirov97@gmail.com</a>.</p>
+</div>
+
+<footer class="site">
+<p class="fname">SubReady Ontario</p>
+<p>A service of Banriq IQ — sole proprietorship, Richmond Hill, Ontario. Contact: <a href="mailto:rufat.baghirov97@gmail.com">rufat.baghirov97@gmail.com</a></p>
+<p>SubReady Ontario provides a dated document-readiness check. It is not insurance advice, a coverage guarantee, or insurance verification; a certificate of insurance alone is never treated as independently verified coverage.</p>
+<p>Not an insurer, broker, or WSIB.</p>
+</footer>
+
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/config.js"></script>
 <script src="assets/app.js"></script>
 <script>
-var form = document.getElementById("auth-form"), msg = document.getElementById("auth-msg");
-function show(t){ msg.textContent = t; }
-form.addEventListener("submit", async function(e){
+var mode = "in";
+var tabIn = document.getElementById("tab-in"), tabUp = document.getElementById("tab-up");
+var signupFields = document.getElementById("signup-fields");
+var title = document.getElementById("auth-title"), submitBtn = document.getElementById("submit-btn");
+var msg = document.getElementById("auth-msg");
+function setMode(m) {
+  mode = m;
+  signupFields.style.display = m === "up" ? "" : "none";
+  tabIn.className = "btn small" + (m === "in" ? "" : " ghost");
+  tabUp.className = "btn small" + (m === "up" ? "" : " ghost");
+  title.textContent = m === "up" ? "Create your account" : "Sign in";
+  submitBtn.textContent = m === "up" ? "Create account" : "Sign in";
+  document.getElementById("password").setAttribute("autocomplete", m === "up" ? "new-password" : "current-password");
+  msg.textContent = "";
+}
+tabIn.addEventListener("click", function(){ setMode("in"); });
+tabUp.addEventListener("click", function(){ setMode("up"); });
+
+function friendly(err) {
+  var t = (err && err.message) || "";
+  if (/invalid login credentials/i.test(t)) { return "That email and password do not match our records. Check for typos, or create an account if you are new."; }
+  if (/already registered|already exists/i.test(t)) { return "An account with this email already exists. Sign in instead."; }
+  if (/password should be at least/i.test(t)) { return "Use a password of at least 6 characters."; }
+  if (/email not confirmed/i.test(t)) { return "Confirm your email first — a confirmation link was sent to your inbox when the account was created."; }
+  if (/invalid email/i.test(t)) { return "That email address does not look complete. Check it and try again."; }
+  if (/rate limit|too many/i.test(t)) { return "Too many attempts in a short time. Wait a few minutes and try again."; }
+  return "Something went wrong: " + t;
+}
+function fieldErr(id, errId, text) {
+  var f = document.getElementById(id), e = document.getElementById(errId);
+  if (text) { f.setAttribute("aria-invalid", "true"); e.textContent = text; e.classList.add("on"); }
+  else { f.removeAttribute("aria-invalid"); e.textContent = ""; e.classList.remove("on"); }
+}
+document.getElementById("auth-form").addEventListener("submit", async function(e){
   e.preventDefault();
-  var r = await Platform.signIn(document.getElementById("email").value, document.getElementById("password").value);
-  if (r.error) { show(r.error.message); } else { window.location.href = "dashboard.html"; }
-});
-document.getElementById("signup-btn").addEventListener("click", async function(){
-  var email = document.getElementById("email").value, pw = document.getElementById("password").value;
-  if (!email || !pw) { show("Enter an email and password first."); return; }
-  var r = await Platform.signUp(email, pw, {
-    full_name: document.getElementById("name").value,
-    company: document.getElementById("company").value
-  });
-  if (r.error) { show(r.error.message); return; }
-  show(Platform.supabaseReady
-    ? "Account created. If email confirmation is on, confirm via your inbox, then log in."
-    : "Saved (preview mode). Continue to your dashboard.");
-  setTimeout(function(){ window.location.href = "dashboard.html"; }, 900);
+  msg.textContent = ""; msg.className = "msg";
+  var email = document.getElementById("email").value.trim();
+  var pw = document.getElementById("password").value;
+  var ok = true;
+  if (!email || email.indexOf("@") < 1) { fieldErr("email", "err-email", "Enter the email address for your account."); ok = false; } else { fieldErr("email", "err-email", ""); }
+  if (!pw) { fieldErr("password", "err-password", "Enter your password."); ok = false; } else { fieldErr("password", "err-password", ""); }
+  if (!ok) { return; }
+  submitBtn.disabled = true;
+  try {
+    if (mode === "in") {
+      var r = await Platform.signIn(email, pw);
+      if (r.error) { msg.textContent = friendly(r.error); msg.className = "msg err-text"; }
+      else { window.location.href = "dashboard.html"; return; }
+    } else {
+      var r2 = await Platform.signUp(email, pw, {
+        full_name: document.getElementById("name").value.trim(),
+        company: document.getElementById("company").value.trim()
+      });
+      if (r2.error) { msg.textContent = friendly(r2.error); msg.className = "msg err-text"; }
+      else {
+        msg.textContent = Platform.supabaseReady
+          ? "Account created. If email confirmation is switched on, confirm from your inbox, then sign in."
+          : "Account saved. Taking you to your dashboard.";
+        setTimeout(function(){ window.location.href = "dashboard.html"; }, 900);
+      }
+    }
+  } catch (err) { msg.textContent = friendly(err); msg.className = "msg err-text"; }
+  submitBtn.disabled = false;
 });
 </script>
 </body></html>

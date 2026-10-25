@@ -1,33 +1,271 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>SubReady Ontario — Before the subcontractor starts, see what is missing</title>
+<meta name="description" content="A dated subcontractor readiness packet: your contract's insurance requirements compared with the documents the sub actually provided. $59 per sub, standard turnaround 2 business days, no subscription.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css"></head>
 <body><div class="wrap">
-<header class="site"><a class="logo" href="index.html">SubReady Ontario</a>
-<nav><a href="order.html">Order</a><a href="login.html">Log in</a><a href="dashboard.html">Dashboard</a></nav></header>
+
+<header class="site">
+<a class="wordmark" href="index.html"><svg class="mark" width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect width="26" height="26" rx="5" fill="#D95D0F"/><path d="M8 9h10M8 13h10M8 17h6" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg><span class="name">SubReady Ontario</span></a>
+<nav class="main">
+<a href="index.html#how">How it works</a>
+<a href="index.html#sample">Sample report</a>
+<a href="index.html#pricing">Pricing</a>
+<a href="index.html#faq">FAQ</a>
+<a href="login.html">Sign in</a>
+<a class="btn small" href="order.html">Start</a>
+</nav></header>
 
 <div id="mode-banner" class="banner" style="display:none"></div>
 
+<div class="hero">
+<p class="sec-label">Subcontractor readiness check — Ontario</p>
 <h1>Before the subcontractor starts, see what is missing.</h1>
-<p class="price">One subcontractor packet — $59 · No subscription</p>
-<p>Upload a sub's COI, endorsement and WSIB clearance against your project requirements and get a dated readiness report + evidence folder: what's met, missing, mismatched or expired — with source timestamps.</p>
+<p class="sub">Enter what your contract requires, send what the sub has actually provided — certificate of insurance, endorsements, WSIB clearance — and get a dated readiness packet: every requirement marked met from document, missing, mismatch, expired, or unverified, with the evidence and dates behind each mark.</p>
+<div class="btnrow">
+<a class="btn brand" data-payments-live style="display:none" href="order.html">Check one subcontractor — $59</a>
+<a class="btn brand" data-payments-soon href="order.html">Join the list — ordering opens soon</a>
+<a class="btn ghost" href="#gapcheck">Run the free gap check</a>
+</div>
+<p class="fine" data-payments-soon>Payments open shortly. You can submit an intake now; we email the $59 payment link as soon as checkout is live. No card is taken today.</p>
+<div class="metarow">
+<div><span class="k">Price</span><span class="v">$59 CAD per sub · 3-pack $99</span></div>
+<div><span class="k">Standard turnaround</span><span class="v">2 business days</span></div>
+<div><span class="k">Scope</span><span class="v">Ontario commercial projects</span></div>
+<div><span class="k">Subscription</span><span class="v">None</span></div>
+</div>
+<div class="notice"><p><strong>A certificate of insurance is not proof of coverage.</strong> It is evidence supplied by a third party. SubReady never marks coverage "independently verified" from a certificate alone — that stamp is used only after a separate permitted confirmation, and your packet always shows which is which.</p></div>
+</div>
 
-<p data-payments-live style="display:none"><a class="cta" href="order.html">Check one subcontractor — $59</a></p>
-<p data-payments-soon><a class="cta" href="order.html">Join the list — ordering opens soon</a></p>
-<p data-payments-soon class="fine">Payments opening soon — join the list: create an account and submit your project requirements and document checklist now; we will email you the $59 payment link as soon as checkout opens. No card is taken today.</p>
+<section class="section" id="checks">
+<p class="sec-label"><span class="no">01</span>What we check</p>
+<h2>Your requirements, compared line by line</h2>
+<p class="lede">Nothing is assumed about your trade or your project. The packet compares the documents on file against the requirements you enter, using one fixed vocabulary: MET_FROM_DOCUMENT, MISSING, MISMATCH, EXPIRED, NOT_APPLICABLE, UNVERIFIED, REVIEW_REQUIRED.</p>
+<table class="spec">
+<thead><tr><th>Check</th><th>What we compare</th><th>Basis</th></tr></thead>
+<tbody>
+<tr><th class="row">CGL limits vs contract</th><td>The per-occurrence and aggregate limits shown on the certificate, against the limits your contract names.</td><td class="ref">Your contract requirements, as you enter them</td></tr>
+<tr><th class="row">Additional insured</th><td>Whether the actual endorsement — not only the certificate — names your company. Coverage for an additional insured lives in the endorsement.</td><td class="ref">Contract clause and the endorsement document</td></tr>
+<tr><th class="row">Waiver of subrogation</th><td>Whether the waiver endorsement your contract requires is on file.</td><td class="ref">Contract clause and the endorsement document</td></tr>
+<tr><th class="row">Per-occurrence vs aggregate</th><td>Both figures are recorded separately. A strong aggregate does not repair a per-occurrence limit that falls short of the contract.</td><td class="ref">Certificate of insurance</td></tr>
+<tr><th class="row">WSIB clearance</th><td>Whether a clearance certificate is on file and in date. A certificate on file stays UNVERIFIED until it is confirmed through a permitted official route.</td><td class="ref">WSIB clearance certificate</td></tr>
+<tr><th class="row">CGL expiry vs project dates</th><td>The policy period on the certificate against your project's start and end dates, including coverage that runs out mid-project.</td><td class="ref">Certificate dates and your project dates</td></tr>
+<tr><th class="row">Certificate holder wording</th><td>Whether the certificate holder matches the exact wording your contract requires — a near-match is recorded as a mismatch, not passed.</td><td class="ref">Contract clause and the certificate</td></tr>
+<tr><th class="row">COR / ISO, where required</th><td>If your contract requires COR or ISO certification, whether the certificate is on file and current.</td><td class="ref">Contract clause and the certificate</td></tr>
+</tbody></table>
+</section>
 
-<div class="card"><h2>How it works</h2>
-<ol>
-<li>Create an account and enter your contract's insurance requirements for the project.</li>
-<li>Add the subcontractor and their documents (COI, endorsements, WSIB clearance) — or note what's still outstanding.</li>
-<li>Pay once per sub — $59, no subscription. Receive a dated readiness report: each requirement marked met-from-document, missing, mismatch, expired, not applicable, or unverified.</li>
-</ol></div>
+<section class="section" id="gapcheck">
+<p class="sec-label"><span class="no">02</span>Free gap check</p>
+<h2>The readiness gap check — two minutes, no sign-up</h2>
+<p class="lede">Tick what your contract requires, then what the sub has provided so far. The result lists the likely gaps in the same vocabulary your paid packet uses. Nothing is stored or sent; the answers stay in your browser.</p>
+<div class="tool">
+<form id="gap-form">
+<div class="cols">
+<div>
+<h3>What your contract requires</h3>
+<label class="checkline"><input type="checkbox" id="r_cgl2"><span>CGL limit of at least $2M per occurrence</span></label>
+<label class="checkline"><input type="checkbox" id="r_cgl5"><span>CGL limit of $5M or more</span></label>
+<label class="checkline"><input type="checkbox" id="r_addl"><span>Additional insured endorsement naming your company</span></label>
+<label class="checkline"><input type="checkbox" id="r_waiver"><span>Waiver of subrogation</span></label>
+<label class="checkline"><input type="checkbox" id="r_wsib"><span>WSIB clearance certificate</span></label>
+<label class="checkline"><input type="checkbox" id="r_notice"><span>30-day notice of cancellation endorsement</span></label>
+</div>
+<div>
+<h3>What the sub has provided so far</h3>
+<label class="checkline"><input type="checkbox" id="p_coi"><span>Certificate of insurance (COI)</span></label>
+<label class="checkline"><input type="checkbox" id="p_coicurrent"><span>The COI policy period covers the full project dates</span></label>
+<label class="checkline"><input type="checkbox" id="p_endorsement"><span>Additional insured endorsement document</span></label>
+<label class="checkline"><input type="checkbox" id="p_waiverdoc"><span>Waiver of subrogation endorsement</span></label>
+<label class="checkline"><input type="checkbox" id="p_wsibdoc"><span>WSIB clearance certificate</span></label>
+<label class="checkline"><input type="checkbox" id="p_noticedoc"><span>30-day notice endorsement shown</span></label>
+<label for="p_coilimit" style="margin-top:16px">CGL limit shown on the COI (per occurrence)</label>
+<select id="p_coilimit"><option value="0">No COI, or limit not recorded</option><option value="1">$1M</option><option value="2">$2M</option><option value="5">$5M</option></select>
+</div>
+</div>
+<p style="margin-top:18px"><button class="btn brand" type="submit">See the gaps</button></p>
+<p class="msg" id="gap-msg"></p>
+<div class="result" id="gap-result"></div>
+</form>
+</div>
+</section>
 
-<div class="notice">A certificate of insurance is evidence supplied by a third party — it is <b>not</b> proof of active, endorsed coverage. SubReady never marks coverage “independently verified” from a COI alone; that status is used only after a separate permitted confirmation, and your report always shows which is which.</div>
+<section class="section" id="sample">
+<p class="sec-label"><span class="no">03</span>Sample packet</p>
+<h2>What a readiness packet looks like</h2>
+<p><span class="tag-sample">Sample</span></p>
+<p class="lede">Excerpt from a sample packet. The general contractor ("Harbourline Construction Inc.") and the subcontractor ("GTA Electrical Contracting Ltd.") are fictional. Your packet is built from your contract and the sub's actual documents.</p>
+<table class="spec">
+<thead><tr><th>Requirement</th><th>Contract requires</th><th>Evidence on file</th><th>Stamp</th></tr></thead>
+<tbody>
+<tr><th class="row">CGL per occurrence</th><td>$2,000,000</td><td>COI shows $2,000,000 per occurrence</td><td><span class="chip pass">MET_FROM_DOCUMENT</span></td></tr>
+<tr><th class="row">Additional insured</th><td>GC to be named by endorsement</td><td>COI mentions additional insured; the endorsement itself was not provided</td><td><span class="chip flag">MISSING</span></td></tr>
+<tr><th class="row">Waiver of subrogation</th><td>Required</td><td>Not shown on the COI or on any endorsement on file</td><td><span class="chip flag">MISSING</span></td></tr>
+<tr><th class="row">WSIB clearance</th><td>Required before start</td><td>Clearance certificate dated Sep 14, 2026 on file</td><td><span class="chip">UNVERIFIED</span></td></tr>
+<tr><th class="row">Policy period vs project</th><td>Coverage through project end (Dec 2026)</td><td>COI policy period ends Oct 31, 2026 — renewal evidence needed for the final two months</td><td><span class="chip flag">EXPIRED</span></td></tr>
+<tr><th class="row">Certificate holder</th><td>"Harbourline Construction Inc."</td><td>COI names "Harbourline Construction" — legal name differs</td><td><span class="chip flag">MISMATCH</span></td></tr>
+</tbody></table>
+<p class="fine">Sample data is synthetic and shown to illustrate format only. A real packet also records the date each document was checked, an index of the evidence, and the exact request wording to send the sub or their broker for every open item. There is no single "approved" badge — each requirement carries its own stamp.</p>
+</section>
 
-<footer><small>A dated document-readiness check. A certificate alone is not independently verified coverage; insurance status is only marked verified when separately confirmed. Not insurance advice or a coverage guarantee. The hiring / start decision is always yours.</small></footer>
+<section class="section" id="how">
+<p class="sec-label"><span class="no">04</span>How it works</p>
+<h2>From contract terms to a dated packet</h2>
+<ol class="steps">
+<li><div><h3>Enter your requirements</h3><p>Tell us what your contract with this sub requires: CGL limits, additional insured, waiver of subrogation, WSIB clearance, certificate holder wording. Nothing is assumed from your trade or project type.</p></div></li>
+<li><div><h3>Send the sub's documents</h3><p>Add the certificate of insurance, endorsements and WSIB clearance the sub has sent you — or note what is still outstanding. Missing documents are recorded as missing; that is useful output, not a failed order.</p></div></li>
+<li><div><h3>Pay once per sub</h3><p>$59 CAD for one subcontractor on one project. Three subs on one project are $99 as a 3-pack. No subscription and no per-seat fees.</p></div></li>
+<li><div><h3>Receive the dated packet</h3><p>Within the standard turnaround of 2 business days you get the packet: each requirement stamped with its status, the evidence and dates behind it, and a ready-to-send request list covering the gaps. Track the order from your dashboard.</p></div></li>
+</ol>
+</section>
+
+<section class="section" id="fit">
+<p class="sec-label"><span class="no">05</span>Who it is for</p>
+<div class="cols">
+<div>
+<h3>A good fit</h3>
+<ul class="tight">
+<li>General contractors onboarding subcontractors one project at a time.</li>
+<li>Construction managers who need the gaps in writing before a start date, not after.</li>
+<li>Property and facilities managers who collect sub documents before work begins.</li>
+<li>Anyone whose current process is a COI in an email thread and a spreadsheet.</li>
+</ul>
+</div>
+<div>
+<h3>Not a fit</h3>
+<ul class="tight">
+<li>Ongoing certificate monitoring across a whole roster of subs — subscription tracking platforms do that job; this is a per-project, per-sub check.</li>
+<li>Anyone who needs insurance advice, a broker, or help placing coverage.</li>
+<li>Anyone who needs a guarantee that a policy will respond to a claim. No document check can promise that.</li>
+</ul>
+</div>
+</div>
+</section>
+
+<section class="section" id="pricing">
+<p class="sec-label"><span class="no">06</span>Pricing</p>
+<h2>Per sub, per project. Nothing recurring.</h2>
+<div class="cols">
+<div class="price-card">
+<p class="amount">$59 <span class="per">CAD, one-off, per subcontractor</span></p>
+<h3 style="margin-top:14px">Included</h3>
+<ul class="inc">
+<li>Requirement-by-requirement comparison for one sub on one project</li>
+<li>A dated readiness packet with an evidence index — document, date, and the basis of each stamp</li>
+<li>The full status vocabulary, item by item, never collapsed into a single badge</li>
+<li>A ready-to-send request list covering every gap, for the sub or their broker</li>
+<li>Order tracking on your dashboard</li>
+</ul>
+<h3 style="margin-top:14px">Not included</h3>
+<ul class="inc">
+<li class="no">Ongoing monitoring or renewal tracking after the packet date</li>
+<li class="no">Insurance advice, placement, or a coverage guarantee</li>
+<li class="no">An "independently verified" stamp without a permitted confirmation — if one cannot be completed, the item stays UNVERIFIED and the packet says why</li>
+<li class="no">Legal advice about your contract</li>
+</ul>
+</div>
+<div class="price-card">
+<p class="amount">$99 <span class="per">CAD, one-off, three subcontractors</span></p>
+<p style="margin-top:14px">The 3-pack covers three subs on the same project, each with its own packet. Order the first packet and note the other two subcontractors in the intake — we confirm the pack pricing with you before any payment is taken.</p>
+<div class="btnrow">
+<a class="btn brand" data-payments-live style="display:none" href="order.html">Check one subcontractor — $59</a>
+<a class="btn brand" data-payments-soon href="order.html">Join the list — ordering opens soon</a>
+</div>
+<p class="fine">If we cannot complete your check, we refund you. A packet that finds gaps is a completed check and is not refunded; finding the gaps is what the check is for.</p>
+</div>
+</div>
+</section>
+
+<section class="section" id="faq">
+<p class="sec-label"><span class="no">07</span>FAQ</p>
+<h2>Questions, answered plainly</h2>
+<details class="faq"><summary>Is this insurance advice or a coverage guarantee?</summary>
+<p>No. SubReady compares documents against your contract's stated requirements and records the result with dates. It is not insurance advice, it does not place or interpret coverage for you, and it does not guarantee that a policy will respond to a claim. The decision to start, hold, or decline a subcontractor is always yours.</p></details>
+<details class="faq"><summary>The sub sent a certificate of insurance. Is that not enough?</summary>
+<p>A certificate is evidence supplied by a third party; it is not the policy. Additional insured coverage, for example, is created by the endorsement — insurers themselves explain that the certificate alone does not confer it. The packet compares what the documents show with what your contract requires, and marks the difference item by item.</p></details>
+<details class="faq"><summary>How do you check WSIB status?</summary>
+<p>From the clearance certificate you provide, and — where a permitted official route exists and you authorize it — by a confirmation recorded with its date and source. We never scrape WSIB or registry sites, bypass logins, or work around CAPTCHAs. If a confirmation cannot be completed, the item is marked UNVERIFIED. It is never upgraded on the strength of the document alone.</p></details>
+<details class="faq"><summary>How long does it take?</summary>
+<p>The standard turnaround is 2 business days from a complete submission. If a confirmation depends on a broker or insurer responding, we tell you which item is waiting rather than holding the whole packet without explanation.</p></details>
+<details class="faq"><summary>What do I need to provide?</summary>
+<p>Your contract's insurance requirements for the project — the intake walks through them — and whatever the sub has sent you so far: certificate of insurance, endorsements, WSIB clearance. Documents you do not have yet are recorded as missing, and the packet includes the wording to request them.</p></details>
+<details class="faq"><summary>Who runs SubReady Ontario?</summary>
+<p>SubReady Ontario is a service of Banriq IQ, a sole proprietorship based in Richmond Hill, Ontario. Packets are prepared per order, by a person working from your contract and the documents on file — not by an automated registry scrape.</p></details>
+</section>
+
+<footer class="site">
+<p class="fname">SubReady Ontario</p>
+<p>A service of Banriq IQ — sole proprietorship, Richmond Hill, Ontario. Contact: <a href="mailto:rufat.baghirov97@gmail.com">rufat.baghirov97@gmail.com</a></p>
+<p>SubReady Ontario provides a dated document-readiness check. It is not insurance advice, a coverage guarantee, or insurance verification; a certificate of insurance alone is never treated as independently verified coverage.</p>
+<p>Not an insurer, broker, or WSIB.</p>
+</footer>
+
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/config.js"></script>
 <script src="assets/app.js"></script>
+<script>
+function c(id){ return document.getElementById(id).checked; }
+document.getElementById("gap-form").addEventListener("submit", function(e){
+  e.preventDefault();
+  var msg = document.getElementById("gap-msg"), box = document.getElementById("gap-result");
+  var reqAny = c("r_cgl2") || c("r_cgl5") || c("r_addl") || c("r_waiver") || c("r_wsib") || c("r_notice");
+  if (!reqAny) {
+    msg.textContent = "Tick at least one item under what your contract requires, then run the check.";
+    msg.className = "msg err-text"; box.style.display = "none"; return;
+  }
+  msg.textContent = ""; msg.className = "msg";
+  var rows = []; // {stamp, cls, title, text}
+  function add(stamp, cls, title, text){ rows.push({ s: stamp, c: cls, t: title, x: text }); }
+  var insReq = c("r_cgl2") || c("r_cgl5") || c("r_addl") || c("r_waiver") || c("r_notice");
+  if (insReq && !c("p_coi")) {
+    add("MISSING", "flag", "Certificate of insurance", "No COI on file. Every insurance requirement in your contract depends on it — request the certificate from the sub or their broker first.");
+  }
+  if (c("p_coi")) {
+    var reqLim = c("r_cgl5") ? 5 : (c("r_cgl2") ? 2 : 0);
+    var lim = Number(document.getElementById("p_coilimit").value);
+    if (reqLim > 0) {
+      if (!lim) { add("UNVERIFIED", "", "CGL limit", "The limit on the certificate has not been recorded, so it cannot be compared with the $" + reqLim + "M requirement."); }
+      else if (lim < reqLim) { add("MISMATCH", "flag", "CGL limit", "Your contract requires $" + reqLim + "M per occurrence. The certificate shows $" + lim + "M."); }
+      else { add("MET_FROM_DOCUMENT", "pass", "CGL limit", "The certificate shows $" + lim + "M per occurrence, which meets the $" + reqLim + "M requirement as written."); }
+    }
+    if (!c("p_coicurrent")) {
+      add("EXPIRED", "flag", "Policy period vs project dates", "The COI on file does not cover the full project dates. Coverage that ends mid-project leaves the remaining work uncovered on paper — renewal evidence is needed before the gap, not after.");
+    } else if (insReq) {
+      add("MET_FROM_DOCUMENT", "pass", "Policy period", "The policy period shown on the COI covers the project dates you entered.");
+    }
+  }
+  if (c("r_addl")) {
+    if (c("p_endorsement")) { add("MET_FROM_DOCUMENT", "pass", "Additional insured", "The endorsement document is on file. In the paid packet it is read to confirm it names your company."); }
+    else { add("MISSING", "flag", "Additional insured endorsement", "Required by your contract, and the endorsement itself is not on file. A certificate that mentions additional insured status is not the endorsement."); }
+  }
+  if (c("r_waiver")) {
+    if (c("p_waiverdoc")) { add("MET_FROM_DOCUMENT", "pass", "Waiver of subrogation", "The waiver endorsement is on file."); }
+    else { add("MISSING", "flag", "Waiver of subrogation", "Required by your contract. It is not shown on the documents provided so far."); }
+  }
+  if (c("r_wsib")) {
+    if (!c("p_wsibdoc")) { add("MISSING", "flag", "WSIB clearance", "Required before start, and no clearance certificate is on file."); }
+    else { add("UNVERIFIED", "", "WSIB clearance", "A clearance certificate is on file. In this quick check it stays UNVERIFIED: WSIB status is only marked independently verified after a confirmation through a permitted official route — never from the document alone."); }
+  }
+  if (c("r_notice")) {
+    if (c("p_noticedoc")) { add("MET_FROM_DOCUMENT", "pass", "30-day notice of cancellation", "The notice endorsement is shown on the documents provided."); }
+    else { add("MISSING", "flag", "30-day notice of cancellation", "Required by your contract. The notice endorsement is not shown on the documents provided so far."); }
+  }
+  var open = rows.filter(function(r){ return r.s !== "MET_FROM_DOCUMENT"; }).length;
+  var html = "<h3 style='font-family:var(--font-body)'>Your result: " + open + " open item" + (open === 1 ? "" : "s") + " of " + rows.length + " checked</h3>";
+  rows.forEach(function(r){
+    html += "<div class='" + (r.c === "pass" ? "ok-item" : "flag-item") + "'><span class='ft'>" + r.t + "</span> <span class='chip " + r.c + "'>" + r.s + "</span><p>" + r.x + "</p></div>";
+  });
+  if (!open) {
+    html += "<p class='fine'>No gaps in this quick check, based on your answers. The paid packet reads the actual documents — wording, names, and dates — which is where mismatches usually sit.</p>";
+  }
+  html += "<div class='btnrow'><a class='btn brand' href='order.html'>Get the full packet — $59</a><a class='btn ghost' href='#sample'>See a sample packet</a></div>" +
+    "<p class='fine'>This gap check is a guide based on your answers. It is not the packet, and it does not verify any document.</p>";
+  box.innerHTML = html; box.style.display = "block";
+  box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+});
+</script>
 </body></html>

@@ -1,41 +1,120 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Order status — SubReady Ontario</title>
+<title>Packet status — SubReady Ontario</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css"></head>
 <body><div class="wrap">
-<header class="site"><a class="logo" href="index.html">SubReady Ontario</a>
-<nav><a href="dashboard.html">Dashboard</a><a href="order.html">New order</a></nav></header>
 
-<h1 style="font-size:1.6rem">Order status</h1>
-<div class="card" id="box"><p class="fine">Loading…</p></div>
+<header class="site">
+<a class="wordmark" href="index.html"><svg class="mark" width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect width="26" height="26" rx="5" fill="#D95D0F"/><path d="M8 9h10M8 13h10M8 17h6" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg><span class="name">SubReady Ontario</span></a>
+<nav class="main">
+<a href="index.html#how">How it works</a>
+<a href="index.html#sample">Sample packet</a>
+<a href="index.html#pricing">Pricing</a>
+<a href="index.html#faq">FAQ</a>
+<a href="login.html">Sign in</a>
+<a class="btn small" href="order.html">Start</a>
+</nav></header>
+
+<div id="mode-banner" class="banner" style="display:none"></div>
+
+<div style="max-width:760px">
+<p class="sec-label" style="margin-top:40px">Packet status</p>
+<h1 style="font-size:2rem">Track your readiness packet</h1>
+
+<form id="lookup" style="display:flex;gap:10px;flex-wrap:wrap;margin:18px 0">
+<label for="oid" style="margin:0;flex:1;min-width:240px"><span class="fine" style="display:block;margin-bottom:5px">Order ID (from your submission or dashboard)</span>
+<input id="oid" placeholder="Paste your order ID"></label>
+<button class="btn brand" type="submit" style="align-self:flex-end">Look up</button>
+</form>
+
+<div id="box"><p class="fine">Enter an order ID above, or open one from your <a href="dashboard.html">dashboard</a>. You can only view your own orders.</p></div>
+
 <p data-payments-soon class="notice">Payments opening soon — orders submitted now are on the waitlist and no card has been charged.</p>
-<p><button class="cta" id="pay-btn" style="display:none">Pay $59 securely</button></p>
-<p class="fine">Questions? Email <a href="mailto:rufat.baghirov97@gmail.com">rufat.baghirov97@gmail.com</a> with your order ID. A dated document-readiness check — not insurance advice or a coverage guarantee. A certificate alone is not independently verified coverage.</p>
+<p><button class="btn brand" id="pay-btn" style="display:none">Pay $59 securely</button></p>
+<p id="report-slot"></p>
+<p class="fine">Questions about a packet: email <a href="mailto:rufat.baghirov97@gmail.com">rufat.baghirov97@gmail.com</a> with your order ID. A dated document-readiness check — not insurance advice or a coverage guarantee. A certificate alone is not independently verified coverage.</p>
+</div>
+
+<footer class="site">
+<p class="fname">SubReady Ontario</p>
+<p>A service of Banriq IQ — sole proprietorship, Richmond Hill, Ontario. Contact: <a href="mailto:rufat.baghirov97@gmail.com">rufat.baghirov97@gmail.com</a></p>
+<p>SubReady Ontario provides a dated document-readiness check. It is not insurance advice, a coverage guarantee, or insurance verification; a certificate of insurance alone is never treated as independently verified coverage.</p>
+<p>Not an insurer, broker, or WSIB.</p>
+</footer>
+
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/config.js"></script>
 <script src="assets/app.js"></script>
 <script>
+function esc(s){ return String(s == null ? "" : s).replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+function chipClass(s){
+  if (s === "report_ready" || s === "paid") { return "chip pass"; }
+  if (s === "needs_info" || s === "pending_payment") { return "chip flag"; }
+  return "chip";
+}
+function timeline(o){
+  var s = o.status;
+  if (s === "declined") {
+    return "<div class='notice'><strong>Declined.</strong> We cannot process this packet. No charge was taken. If you think this is an error, email us with the order ID.</div>";
+  }
+  if (s === "refunded") {
+    return "<div class='notice'><strong>Refunded.</strong> The check could not be completed, so the payment was returned in full.</div>";
+  }
+  var stage = 1, midNote = "";
+  if (s === "waitlist") { stage = 1; midNote = "On the list. When checkout opens, we email your payment link and the packet starts once payment is confirmed."; }
+  else if (s === "pending_payment") { stage = 1; midNote = "Waiting for payment. Use the Pay button below; the packet starts once payment is confirmed."; }
+  else if (s === "paid") { stage = 2; midNote = "Payment confirmed. Your packet is queued."; }
+  else if (s === "in_review") { stage = 2; midNote = "The documents are being compared with your contract requirements, item by item."; }
+  else if (s === "needs_info") { stage = 2; midNote = "Documents or facts are outstanding. We emailed you exactly what is missing."; }
+  else if (s === "report_ready") { stage = 3; }
+  function li(n, title, desc){
+    var cls = stage > n ? "done" : (stage === n ? (n === 3 ? "done" : "cur") : "");
+    if (n === 3 && s === "report_ready") { cls = "done"; }
+    return "<li class='" + cls + "'><span class='dot'></span><div class='tt'>" + title + "</div><div class='td'>" + desc + "</div></li>";
+  }
+  return "<ol class='timeline'>" +
+    li(1, "Received", "Intake received on " + new Date(o.created_at).toLocaleString() + ".") +
+    li(2, "In review", midNote || "The documents are being compared with your contract requirements.") +
+    li(3, "Report ready", s === "report_ready" ? "The dated readiness packet and evidence pack are ready. Use the report link below." : "Standard turnaround is 2 business days from a complete submission.") +
+    "</ol>";
+}
+document.getElementById("lookup").addEventListener("submit", function(e){
+  e.preventDefault();
+  var id = document.getElementById("oid").value.trim();
+  if (id) { window.location.href = "status.html?id=" + encodeURIComponent(id); }
+});
 (async function(){
   var box = document.getElementById("box");
   var id = new URLSearchParams(window.location.search).get("id");
-  if (!id) { box.innerHTML = '<p class="fine">No order ID in the link. See your <a href="dashboard.html">dashboard</a>.</p>'; return; }
+  if (!id) { return; }
+  document.getElementById("oid").value = id;
+  box.innerHTML = '<p class="fine">Loading…</p>';
   try {
     var o = await Platform.getOrder(id);
-    if (!o) { box.innerHTML = '<p class="fine">Order not found (you can only view your own orders).</p>'; return; }
+    if (!o) { box.innerHTML = '<p class="fine">Order not found. You can only view orders placed from your own account — check the ID, or sign in with the account that submitted it.</p>'; return; }
     var i = o.intake || {};
-    box.innerHTML = "<table>" +
-      "<tr><th>Order</th><td>" + o.id + "</td></tr>" +
-      "<tr><th>Subcontractor</th><td>" + (i.sub_company || "—") + " (" + (i.sub_trade || "—") + ")</td></tr>" +
-      "<tr><th>Price</th><td>CAD $" + o.price_cad + " one-off</td></tr>" +
-      "<tr><th>Status</th><td><span class='status'>" + o.status + "</span></td></tr>" +
-      "<tr><th>Submitted</th><td>" + new Date(o.created_at).toLocaleString() + "</td></tr></table>";
+    box.innerHTML = "<div class='card'><table class='plain'>" +
+      "<tr><th>Order reference</th><td><span class='refcode'>" + esc(String(o.id).replace(/[^a-zA-Z0-9]/g, "").slice(0, 8).toUpperCase()) + "</span> <span class='fine'>(" + esc(o.id) + ")</span></td></tr>" +
+      "<tr><th>Subcontractor</th><td>" + esc(i.sub_company || "—") + (i.sub_trade ? " (" + esc(i.sub_trade) + ")" : "") + "</td></tr>" +
+      "<tr><th>Project</th><td>" + esc(i.project || "—") + "</td></tr>" +
+      "<tr><th>Service</th><td>" + esc(o.product || "") + "</td></tr>" +
+      "<tr><th>Price</th><td>CAD $" + esc(o.price_cad) + ", one-off</td></tr>" +
+      "<tr><th>Status</th><td><span class='" + chipClass(o.status) + "'>" + esc(o.status) + "</span></td></tr>" +
+      "</table></div>" + timeline(o);
+    if (o.report_url) {
+      document.getElementById("report-slot").innerHTML =
+        "<a class='btn brand' href='" + esc(o.report_url) + "'>Open your readiness packet</a>";
+    }
     if (Platform.paymentsReady && o.status === "pending_payment") {
       var b = document.getElementById("pay-btn");
       b.style.display = "";
       b.addEventListener("click", function(){ Platform.checkout(o.id); });
     }
-  } catch (e) { box.innerHTML = '<p class="fine">Could not load this order: ' + e.message + "</p>"; }
+  } catch (e) { box.innerHTML = '<p class="fine">Could not load this order: ' + esc(e.message) + "</p>"; }
 })();
 </script>
 </body></html>

@@ -1,41 +1,96 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Dashboard — SubReady Ontario</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css"></head>
 <body><div class="wrap">
-<header class="site"><a class="logo" href="index.html">SubReady Ontario</a>
-<nav><a href="order.html">New order</a><a href="#" id="signout-link">Sign out</a></nav></header>
+
+<header class="site">
+<a class="wordmark" href="index.html"><svg class="mark" width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect width="26" height="26" rx="5" fill="#D95D0F"/><path d="M8 9h10M8 13h10M8 17h6" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg><span class="name">SubReady Ontario</span></a>
+<nav class="main">
+<a href="index.html#how">How it works</a>
+<a href="index.html#sample">Sample packet</a>
+<a href="index.html#pricing">Pricing</a>
+<a href="index.html#faq">FAQ</a>
+<a href="login.html">Sign in</a>
+<a class="btn small" href="order.html">Start</a>
+</nav></header>
 
 <div id="mode-banner" class="banner" style="display:none"></div>
-<h1 style="font-size:1.6rem">Your dashboard</h1>
-<p id="who" class="fine"></p>
-<p><a class="cta" href="order.html">Check one subcontractor — $59</a></p>
 
-<div class="card"><h2>Your orders</h2>
+<p class="sec-label" style="margin-top:40px">Dashboard</p>
+<h1 style="font-size:2rem">Your packets</h1>
+<p id="who" class="fine"></p>
+
 <div id="orders"><p class="fine">Loading…</p></div>
+
+<div class="card">
+<h2 style="font-size:1.25rem">What the statuses mean</h2>
+<table class="plain">
+<tr><th>waitlist</th><td>Submitted before payments opened. No card has been charged.</td></tr>
+<tr><th>pending_payment</th><td>Intake saved; waiting for the Stripe payment.</td></tr>
+<tr><th>paid</th><td>Payment confirmed; the packet is queued.</td></tr>
+<tr><th>in_review</th><td>Documents are being compared with your contract requirements.</td></tr>
+<tr><th>needs_info</th><td>Documents or facts are outstanding. We emailed you what is missing.</td></tr>
+<tr><th>report_ready</th><td>The dated readiness packet and evidence pack have been delivered.</td></tr>
+<tr><th>declined</th><td>We cannot process this packet. No charge was taken.</td></tr>
+<tr><th>refunded</th><td>The check could not be completed and the payment was returned.</td></tr>
+</table>
+<p class="fine" style="margin-top:12px">Inside a packet, each document carries its own stamp: MET_FROM_DOCUMENT, MISSING, MISMATCH, EXPIRED, NOT_APPLICABLE, UNVERIFIED, or REVIEW_REQUIRED. INDEPENDENTLY_VERIFIED is used only after a separate permitted confirmation — a certificate alone never counts as verified coverage, and there is no single "approved" badge.</p>
 </div>
-<p class="fine">Order statuses: <b>waitlist</b> = submitted before payments opened · <b>pending_payment</b> = awaiting Stripe payment · <b>paid</b> = payment confirmed, packet queued · <b>in_review</b> = documents being compared to your requirements · <b>needs_info</b> = documents outstanding · <b>report_ready</b> = dated readiness report + evidence pack delivered · <b>declined</b> = cannot process, no charge taken.<br>Document statuses inside a report: <b>MET_FROM_DOCUMENT</b>, <b>MISSING</b>, <b>MISMATCH</b>, <b>EXPIRED</b>, <b>NOT_APPLICABLE</b>, <b>UNVERIFIED</b>, <b>REVIEW_REQUIRED</b>. A document is only ever marked <b>INDEPENDENTLY_VERIFIED</b> by SubReady after a separate permitted confirmation — a certificate alone never counts as verified coverage, and there is no single green “approved” badge.</p>
+
+<footer class="site">
+<p class="fname">SubReady Ontario</p>
+<p>A service of Banriq IQ — sole proprietorship, Richmond Hill, Ontario. Contact: <a href="mailto:rufat.baghirov97@gmail.com">rufat.baghirov97@gmail.com</a></p>
+<p>SubReady Ontario provides a dated document-readiness check. It is not insurance advice, a coverage guarantee, or insurance verification; a certificate of insurance alone is never treated as independently verified coverage.</p>
+<p>Not an insurer, broker, or WSIB.</p>
+</footer>
+
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/config.js"></script>
 <script src="assets/app.js"></script>
 <script>
+function esc(s){ return String(s == null ? "" : s).replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+function chipClass(s){
+  if (s === "report_ready" || s === "paid") { return "chip pass"; }
+  if (s === "needs_info" || s === "pending_payment") { return "chip flag"; }
+  return "chip";
+}
 (async function(){
   var user = await Platform.currentUser();
   var who = document.getElementById("who"), box = document.getElementById("orders");
-  if (!user) { who.innerHTML = 'You are not logged in. <a href="login.html">Log in or create an account</a>.'; box.innerHTML = ""; return; }
-  who.textContent = "Signed in as " + (user.email || "");
+  if (!user) {
+    who.innerHTML = 'You are not signed in. <a href="login.html">Sign in or create an account</a> to see your packets.';
+    box.innerHTML = ""; return;
+  }
+  who.innerHTML = "Signed in as " + esc(user.email || "") + ' · <a href="#" id="signout-link">Sign out</a>';
+  var out = document.getElementById("signout-link");
+  if (out) { out.addEventListener("click", function(e){ e.preventDefault(); Platform.signOut(); }); }
   try {
     var orders = await Platform.listOrders();
-    if (!orders.length) { box.innerHTML = '<p class="fine">No orders yet.</p>'; return; }
-    var rows = orders.map(function(o){
-      var p = (o.intake && o.intake.sub_company) || "—";
-      return "<tr><td>" + new Date(o.created_at).toLocaleDateString() + "</td><td>" + p +
-        '</td><td><span class="status">' + o.status + "</span></td>" +
-        '<td><a href="status.html?id=' + encodeURIComponent(o.id) + '">View</a></td></tr>';
+    if (!orders.length) {
+      box.innerHTML = "<div class='empty'><h3 style='font-family:var(--font-body)'>No packets yet</h3>" +
+        "<p class='fine'>When you submit a subcontractor for a readiness check, it appears here with its status.</p>" +
+        "<p><a class='btn brand' href='order.html'>Check one subcontractor — $59</a></p></div>";
+      return;
+    }
+    box.innerHTML = orders.map(function(o){
+      var name = (o.intake && o.intake.sub_company) || o.product || "Readiness Packet";
+      var sub = (o.intake && o.intake.project) ? esc(o.intake.project) + " · " : "";
+      return "<div class='order-card'><div class='oc-main'>" +
+        "<div class='oc-name'>" + esc(name) + "</div>" +
+        "<div class='oc-meta'>" + sub + esc(o.product || "") + " · Submitted " + new Date(o.created_at).toLocaleDateString() + "</div>" +
+        "<div class='oc-meta'>Reference <span class='refcode'>" + esc(String(o.id).replace(/[^a-zA-Z0-9]/g, "").slice(0, 8).toUpperCase()) + "</span></div>" +
+        "</div><div class='oc-side'>" +
+        "<div class='oc-price'>CAD $" + esc(o.price_cad) + "</div>" +
+        "<p style='margin:8px 0'><span class='" + chipClass(o.status) + "'>" + esc(o.status) + "</span></p>" +
+        "<a class='btn small ghost' href='status.html?id=" + encodeURIComponent(o.id) + "'>View status</a>" +
+        "</div></div>";
     }).join("");
-    box.innerHTML = "<table><tr><th>Date</th><th>Subcontractor</th><th>Status</th><th></th></tr>" + rows + "</table>";
-  } catch (e) { box.innerHTML = '<p class="fine">Could not load orders: ' + e.message + "</p>"; }
+  } catch (e) { box.innerHTML = '<p class="fine">Could not load orders: ' + esc(e.message) + "</p>"; }
 })();
 </script>
 </body></html>
