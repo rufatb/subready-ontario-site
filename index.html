@@ -1,11 +1,33 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>SubReady Ontario — Before the subcontractor starts, see what is missing</title>
-<style>body{font-family:system-ui,sans-serif;max-width:760px;margin:40px auto;padding:0 20px;color:#12233d}h1{font-size:2rem}.cta{background:#e86a17;color:#fff;padding:14px 22px;border-radius:10px;display:inline-block;text-decoration:none;font-weight:700}.price{font-size:1.4rem;font-weight:700}small{color:#555}</style></head>
-<body>
+<link rel="stylesheet" href="assets/style.css"></head>
+<body><div class="wrap">
+<header class="site"><a class="logo" href="index.html">SubReady Ontario</a>
+<nav><a href="order.html">Order</a><a href="login.html">Log in</a><a href="dashboard.html">Dashboard</a></nav></header>
+
+<div id="mode-banner" class="banner" style="display:none"></div>
+
 <h1>Before the subcontractor starts, see what is missing.</h1>
 <p class="price">One subcontractor packet — $59 · No subscription</p>
 <p>Upload a sub's COI, endorsement and WSIB clearance against your project requirements and get a dated readiness report + evidence folder: what's met, missing, mismatched or expired — with source timestamps.</p>
-<a class="cta" href="mailto:rufat.baghirov97@gmail.com?subject=SubReady%20packet%20—%20one%20sub%20($59)">Check one subcontractor — $59</a>
-<p><small>A dated document-readiness check. A certificate alone is not independently verified coverage; insurance status is only marked verified when separately confirmed. Not insurance advice or a coverage guarantee.</small></p>
+
+<p data-payments-live style="display:none"><a class="cta" href="order.html">Check one subcontractor — $59</a></p>
+<p data-payments-soon><a class="cta" href="order.html">Join the list — ordering opens soon</a></p>
+<p data-payments-soon class="fine">Payments opening soon — join the list: create an account and submit your project requirements and document checklist now; we will email you the $59 payment link as soon as checkout opens. No card is taken today.</p>
+
+<div class="card"><h2>How it works</h2>
+<ol>
+<li>Create an account and enter your contract's insurance requirements for the project.</li>
+<li>Add the subcontractor and their documents (COI, endorsements, WSIB clearance) — or note what's still outstanding.</li>
+<li>Pay once per sub — $59, no subscription. Receive a dated readiness report: each requirement marked met-from-document, missing, mismatch, expired, not applicable, or unverified.</li>
+</ol></div>
+
+<div class="notice">A certificate of insurance is evidence supplied by a third party — it is <b>not</b> proof of active, endorsed coverage. SubReady never marks coverage “independently verified” from a COI alone; that status is used only after a separate permitted confirmation, and your report always shows which is which.</div>
+
+<footer><small>A dated document-readiness check. A certificate alone is not independently verified coverage; insurance status is only marked verified when separately confirmed. Not insurance advice or a coverage guarantee. The hiring / start decision is always yours.</small></footer>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/config.js"></script>
+<script src="assets/app.js"></script>
 </body></html>

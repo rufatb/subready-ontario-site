@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Order a readiness packet — SubReady Ontario</title>
+<link rel="stylesheet" href="assets/style.css"></head>
+<body><div class="wrap">
+<header class="site"><a class="logo" href="index.html">SubReady Ontario</a>
+<nav><a href="dashboard.html">Dashboard</a><a href="login.html">Log in</a></nav></header>
+
+<div id="mode-banner" class="banner" style="display:none"></div>
+<h1 style="font-size:1.6rem">Subcontractor readiness intake — one sub, $59</h1>
+<p class="fine">Enter what YOUR contract requires (nothing is assumed about your trade or project), then what the sub has actually provided. Statuses use the evidence vocabulary from your report: MET_FROM_DOCUMENT · MISSING · MISMATCH · EXPIRED · NOT_APPLICABLE · UNVERIFIED · REVIEW_REQUIRED. “Independently verified” is never self-selected — SubReady sets it only after a separate permitted confirmation.</p>
+
+<form id="intake">
+<div class="card"><h2>Your company &amp; project</h2>
+<div class="grid">
+<div><label for="gc_company">GC company (legal name) *</label><input id="gc_company" required></div>
+<div><label for="contact_name">Contact name *</label><input id="contact_name" required></div>
+<div><label for="contact_email">Contact email *</label><input id="contact_email" type="email" required></div>
+<div><label for="project">Project name / nickname *</label><input id="project" required></div>
+<div><label for="start_date">Anticipated start date</label><input id="start_date" type="date"></div>
+<div><label for="end_date">Anticipated end date</label><input id="end_date" type="date"></div>
+</div></div>
+
+<div class="card"><h2>Subcontractor</h2>
+<div class="grid">
+<div><label for="sub_company">Subcontractor company (legal name) *</label><input id="sub_company" required></div>
+<div><label for="sub_trade">Trade *</label><input id="sub_trade" required placeholder="e.g. electrical, roofing, HVAC"></div>
+<div><label for="sub_contact">Sub contact (name/email, if known)</label><input id="sub_contact"></div>
+<div><label for="trade_licence">Trade licence applies to this sub?</label><select id="trade_licence"><option>Not applicable</option><option>Yes — will provide</option><option>Unsure — review required</option></select></div>
+</div></div>
+
+<div class="card"><h2>Your contract's insurance requirements</h2>
+<div class="grid">
+<div><label for="req_gl_occurrence">CGL limit per occurrence (e.g. $2,000,000)</label><input id="req_gl_occurrence"></div>
+<div><label for="req_gl_aggregate">CGL general aggregate (e.g. $5,000,000)</label><input id="req_gl_aggregate"></div>
+<div><label for="req_cert_holder">Required certificate holder (exact wording)</label><input id="req_cert_holder"></div>
+<div><label for="req_addl_insured">Additional insured endorsement required?</label><select id="req_addl_insured"><option>Yes</option><option>No</option></select></div>
+<div><label for="req_waiver">Waiver of subrogation required?</label><select id="req_waiver"><option>No</option><option>Yes</option></select></div>
+<div><label for="req_wsib">WSIB clearance required?</label><select id="req_wsib"><option>Yes</option><option>No</option><option>Scope review (possible home-renovation exception)</option></select></div>
+</div>
+<label for="req_notes">Other contract insurance terms / clause text</label><textarea id="req_notes"></textarea>
+</div>
+
+<div class="card"><h2>Documents provided by the sub</h2>
+<p class="fine">For each document: whether you have it, its key dates, and its status <i>as far as the document itself shows</i>. Anything not yet officially confirmed stays UNVERIFIED.</p>
+<table>
+<tr><th>Document</th><th>Have it?</th><th>Expiry / details</th><th>Status from document</th></tr>
+<tr><td>Certificate of Insurance (COI)</td>
+<td><select id="doc_coi_have"><option value="no">No</option><option value="yes">Yes</option></select></td>
+<td><input id="doc_coi_expiry" type="date" aria-label="COI expiry date"></td>
+<td><select id="doc_coi_status"><option>UNVERIFIED</option><option>MET_FROM_DOCUMENT</option><option>MISMATCH</option><option>EXPIRED</option><option>REVIEW_REQUIRED</option></select></td></tr>
+<tr><td>Additional insured endorsement</td>
+<td><select id="doc_end_have"><option value="no">No</option><option value="yes">Yes</option></select></td>
+<td><input id="doc_end_detail" placeholder="Endorsement names your company?"></td>
+<td><select id="doc_end_status"><option>MISSING</option><option>MET_FROM_DOCUMENT</option><option>MISMATCH</option><option>UNVERIFIED</option><option>NOT_APPLICABLE</option><option>REVIEW_REQUIRED</option></select></td></tr>
+<tr><td>WSIB clearance certificate</td>
+<td><select id="doc_wsib_have"><option value="no">No</option><option value="yes">Yes</option></select></td>
+<td><input id="doc_wsib_detail" placeholder="Clearance # / validity dates"></td>
+<td><select id="doc_wsib_status"><option>UNVERIFIED</option><option>MISSING</option><option>EXPIRED</option><option>REVIEW_REQUIRED</option></select></td></tr>
+</table>
+<label for="docs_note">Document file names / how you'll send them</label>
+<input id="docs_note" placeholder="e.g. COI-acme-electrical.pdf — uploads open with the live platform">
+<p class="fine">Uploads switch on with the live platform (private Supabase Storage bucket “documents”, per-user folders, expiring links). Never send documents you are not authorized to share.</p>
+<label style="font-weight:400"><input type="checkbox" id="truthful" required style="width:auto"> I confirm the requirements and document details submitted are accurate to the best of my knowledge, and I understand the final hire/start decision is mine. *</label>
+</div>
+
+<p data-payments-soon class="notice">Payments opening soon — submitting joins the list for this packet at $59. No card is taken today.</p>
+<p><button class="cta" type="submit">Submit intake</button></p>
+<p id="form-msg" class="fine"></p>
+</form>
+
+<p class="fine">A dated document-readiness check. Not insurance advice or a coverage guarantee. A WSIB clearance number on a document is UNVERIFIED until checked through a permitted official route — we never scrape or bypass WSIB/registry logins or CAPTCHAs.</p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/config.js"></script>
+<script src="assets/app.js"></script>
+<script>
+function v(id){ return document.getElementById(id).value.trim(); }
+function docRow(have, detail, status){
+  var h = v(have);
+  return { provided: h === "yes", detail: v(detail), status: h === "yes" ? v(status) : (v(status) === "NOT_APPLICABLE" ? "NOT_APPLICABLE" : "MISSING") };
+}
+document.getElementById("intake").addEventListener("submit", async function(e){
+  e.preventDefault();
+  var msg = document.getElementById("form-msg");
+  var intake = {
+    gc_company: v("gc_company"), contact_name: v("contact_name"), contact_email: v("contact_email"),
+    project: v("project"), start_date: v("start_date"), end_date: v("end_date"),
+    sub_company: v("sub_company"), sub_trade: v("sub_trade"), sub_contact: v("sub_contact"),
+    trade_licence: v("trade_licence"),
+    requirements: {
+      cgl_per_occurrence: v("req_gl_occurrence"), cgl_aggregate: v("req_gl_aggregate"),
+      certificate_holder: v("req_cert_holder"),
+      additional_insured_required: v("req_addl_insured") === "Yes",
+      waiver_of_subrogation_required: v("req_waiver") === "Yes",
+      wsib_clearance_required: v("req_wsib"), notes: v("req_notes")
+    },
+    documents: {
+      coi: docRow("doc_coi_have", "doc_coi_expiry", "doc_coi_status"),
+      endorsement: docRow("doc_end_have", "doc_end_detail", "doc_end_status"),
+      wsib_clearance: docRow("doc_wsib_have", "doc_wsib_detail", "doc_wsib_status")
+    },
+    documents_note: v("docs_note"),
+    truthfulness_confirmed: document.getElementById("truthful").checked
+  };
+  intake.documents.coi.expiry_date = v("doc_coi_expiry");
+  try {
+    var order = await Platform.createOrder(intake);
+    if (Platform.paymentsReady) {
+      msg.textContent = "Intake saved. Taking you to secure checkout…";
+      if (!Platform.checkout(order.id)) { msg.textContent = "Intake saved. Checkout could not open — see status page."; }
+    } else {
+      msg.innerHTML = "You are on the list for this packet. We will email the $59 payment link when checkout opens. " +
+        'Track it here: <a href="status.html?id=' + encodeURIComponent(order.id) + '">order status</a>.';
+    }
+  } catch (err) { msg.textContent = "Could not save: " + err.message; }
+});
+</script>
+</body></html>

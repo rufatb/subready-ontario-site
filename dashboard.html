@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dashboard — SubReady Ontario</title>
+<link rel="stylesheet" href="assets/style.css"></head>
+<body><div class="wrap">
+<header class="site"><a class="logo" href="index.html">SubReady Ontario</a>
+<nav><a href="order.html">New order</a><a href="#" id="signout-link">Sign out</a></nav></header>
+
+<div id="mode-banner" class="banner" style="display:none"></div>
+<h1 style="font-size:1.6rem">Your dashboard</h1>
+<p id="who" class="fine"></p>
+<p><a class="cta" href="order.html">Check one subcontractor — $59</a></p>
+
+<div class="card"><h2>Your orders</h2>
+<div id="orders"><p class="fine">Loading…</p></div>
+</div>
+<p class="fine">Order statuses: <b>waitlist</b> = submitted before payments opened · <b>pending_payment</b> = awaiting Stripe payment · <b>paid</b> = payment confirmed, packet queued · <b>in_review</b> = documents being compared to your requirements · <b>needs_info</b> = documents outstanding · <b>report_ready</b> = dated readiness report + evidence pack delivered · <b>declined</b> = cannot process, no charge taken.<br>Document statuses inside a report: <b>MET_FROM_DOCUMENT</b>, <b>MISSING</b>, <b>MISMATCH</b>, <b>EXPIRED</b>, <b>NOT_APPLICABLE</b>, <b>UNVERIFIED</b>, <b>REVIEW_REQUIRED</b>. A document is only ever marked <b>INDEPENDENTLY_VERIFIED</b> by SubReady after a separate permitted confirmation — a certificate alone never counts as verified coverage, and there is no single green “approved” badge.</p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/config.js"></script>
+<script src="assets/app.js"></script>
+<script>
+(async function(){
+  var user = await Platform.currentUser();
+  var who = document.getElementById("who"), box = document.getElementById("orders");
+  if (!user) { who.innerHTML = 'You are not logged in. <a href="login.html">Log in or create an account</a>.'; box.innerHTML = ""; return; }
+  who.textContent = "Signed in as " + (user.email || "");
+  try {
+    var orders = await Platform.listOrders();
+    if (!orders.length) { box.innerHTML = '<p class="fine">No orders yet.</p>'; return; }
+    var rows = orders.map(function(o){
+      var p = (o.intake && o.intake.sub_company) || "—";
+      return "<tr><td>" + new Date(o.created_at).toLocaleDateString() + "</td><td>" + p +
+        '</td><td><span class="status">' + o.status + "</span></td>" +
+        '<td><a href="status.html?id=' + encodeURIComponent(o.id) + '">View</a></td></tr>';
+    }).join("");
+    box.innerHTML = "<table><tr><th>Date</th><th>Subcontractor</th><th>Status</th><th></th></tr>" + rows + "</table>";
+  } catch (e) { box.innerHTML = '<p class="fine">Could not load orders: ' + e.message + "</p>"; }
+})();
+</script>
+</body></html>
