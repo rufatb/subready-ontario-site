@@ -24,6 +24,34 @@ window.PLATFORM_CONFIG = {
   PRICE_CAD: 59,
   PRICE_LABEL: "$59",
 
+  /* Products sold on this platform. The first entry ("full") is the
+     original product and mirrors the legacy PRODUCT_NAME / PRICE_CAD /
+     PRICE_LABEL / STRIPE_PAYMENT_LINK fields, which stay in place for
+     backward compatibility. Each product carries its own Stripe Payment
+     Link. Until a product's stripe_link is a real
+     https://buy.stripe.com/... URL (any PLACEHOLDER_* value counts as
+     not live), orders for that product are saved as "waitlist" instead
+     of "pending_payment" — the same behaviour a single placeholder link
+     had before. */
+  PRODUCTS: [
+    {
+      id: "full",
+      name: "Subcontractor Readiness Packet (1 sub)",
+      price_cad: 59,
+      price_label: "$59",
+      stripe_link: "https://buy.stripe.com/cNieVd1QM0S50z44ZYgEg01"
+    },
+    {
+      id: "quickcheck",
+      name: "Paperwork QuickCheck",
+      price_cad: 10,
+      price_label: "$10",
+      // Go-live: Stripe Payment Link for "SubReady Ontario — Paperwork
+      // QuickCheck", CAD 10.00, one-time. See BUILD_NOTES_QUICKCHECK.md.
+      stripe_link: "https://buy.stripe.com/dRm4gz52Y7gt4PkakigEg03"
+    }
+  ],
+
   SUPABASE_URL: "https://ohjowgdgvcvaaksjaqdb.supabase.co",           // e.g. https://abcd1234.supabase.co
   SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9oam93Z2RndmN2YWFrc2phcWRiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4MDczODIsImV4cCI6MjEwODM4MzM4Mn0.LB9FznxcIxbAfJrRWDtWV2p6vWLYhlVSju_X52A4rZU", // long anon/public key from Supabase
 
