@@ -40,6 +40,31 @@
 <div class="notice"><p><strong>A certificate of insurance is not proof of coverage.</strong> It is evidence supplied by a third party. SubReady never marks coverage "independently verified" from a certificate alone — that stamp is used only after a separate permitted confirmation, and your packet always shows which is which.</p></div>
 </div>
 
+<section class="section" id="products">
+<p class="sec-label">Two checks, two prices</p>
+<h2>Subcontractors: start with the $10 QuickCheck. GCs: the full packet</h2>
+<p class="lede">New: the Paperwork QuickCheck is for subcontractors themselves. Before a GC asks, check your own paperwork. Send your insurance certificate and WSIB clearance. We flag what is expired, missing, or named wrong — limits, dates, names, certificate holder — in plain English, so you can fix it before it costs you a start date.</p>
+<div class="cols">
+<div class="price-card">
+<p class="amount">$10 <span class="per">CAD, one-off</span></p>
+<h3 style="margin-top:14px">Paperwork QuickCheck</h3>
+<p>Your own insurance certificate and WSIB clearance, checked for the things GCs flag most: expired dates, missing endorsements, limits that fall short, names and certificate holder wording that do not match. Reported in plain English, with what to fix.</p>
+<div class="btnrow">
+<a class="btn brand" href="order.html?product=quickcheck">Start with the QuickCheck — $10</a>
+</div>
+</div>
+<div class="price-card">
+<p class="amount">$59 <span class="per">CAD, one-off, per subcontractor</span></p>
+<h3 style="margin-top:14px">Readiness Packet — the full check</h3>
+<p>For general contractors: your contract's requirements compared with one sub's documents, each item stamped — met from document, missing, mismatch, expired, or unverified — in a dated packet with an evidence index and a ready-to-send request list for the gaps.</p>
+<div class="btnrow">
+<a class="btn ghost" href="order.html">Check one subcontractor — $59</a>
+</div>
+</div>
+</div>
+<p class="fine" style="margin-top:14px">Neither check is insurance advice or a coverage guarantee. A document alone is never treated as verified — WSIB stays UNVERIFIED until it is confirmed through a permitted official route.</p>
+</section>
+
 <section class="section" id="checks">
 <p class="sec-label"><span class="no">01</span>What we check</p>
 <h2>Your requirements, compared line by line</h2>
@@ -218,7 +243,7 @@ document.getElementById("gap-form").addEventListener("submit", function(e){
     msg.className = "msg err-text"; box.style.display = "none"; return;
   }
   msg.textContent = ""; msg.className = "msg";
-  var rows = []; // {stamp, cls, title, text}
+  var rows = [];
   function add(stamp, cls, title, text){ rows.push({ s: stamp, c: cls, t: title, x: text }); }
   var insReq = c("r_cgl2") || c("r_cgl5") || c("r_addl") || c("r_waiver") || c("r_notice");
   if (insReq && !c("p_coi")) {
