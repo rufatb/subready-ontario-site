@@ -22,8 +22,14 @@
 
 <div style="max-width:820px">
 <p class="sec-label" style="margin-top:40px">Order</p>
-<h1 style="font-size:2rem">Subcontractor readiness intake — one sub, $59</h1>
-<p class="lede" style="font-size:1.02rem">Enter what your contract requires — nothing is assumed about your trade or project — then what the sub has actually provided. Document statuses use the packet vocabulary: MET_FROM_DOCUMENT · MISSING · MISMATCH · EXPIRED · NOT_APPLICABLE · UNVERIFIED · REVIEW_REQUIRED. "Independently verified" is never self-selected; SubReady sets it only after a separate permitted confirmation.</p>
+<h1 style="font-size:2rem" id="order-h1">Subcontractor readiness intake — one sub, $59</h1>
+<p class="lede" style="font-size:1.02rem">For the Readiness Packet, enter what your contract requires — nothing is assumed about your trade or project — then what the sub has actually provided. For the Paperwork QuickCheck, you are the subcontractor: enter your own documents instead of contract requirements. Document statuses use the packet vocabulary: MET_FROM_DOCUMENT · MISSING · MISMATCH · EXPIRED · NOT_APPLICABLE · UNVERIFIED · REVIEW_REQUIRED. "Independently verified" is never self-selected; SubReady sets it only after a separate permitted confirmation.</p>
+
+<div class="card" style="margin-bottom:22px"><h2 style="font-size:1.3rem">Choose your check</h2>
+<label class="checkline"><input type="radio" name="product_choice" value="quickcheck"><span><strong>Paperwork QuickCheck — $10</strong><br>For subcontractors checking their own paperwork before a GC asks. Send your insurance certificate and WSIB clearance. We flag what is expired, missing, or named wrong — limits, dates, names, certificate holder — in plain English, so you can fix it before it costs you a start date.</span></label>
+<label class="checkline"><input type="radio" name="product_choice" value="full" checked><span><strong>Readiness Packet — $59</strong><br>For general contractors: your contract's requirements compared with one subcontractor's documents, each item stamped in a dated packet with an evidence index and a request list for the gaps.</span></label>
+<p class="fine" style="margin-top:10px">The same intake is used for both — QuickCheck buyers enter their own company as the subcontractor. Neither check is insurance advice or a coverage guarantee, and a document alone is never treated as verified.</p>
+</div>
 
 <ol class="progress" id="progress">
 <li class="cur" data-p="1"><span class="n">1</span><span class="lbl">Your details</span></li>
@@ -95,8 +101,8 @@
 <div class="card"><h2 style="font-size:1.3rem">Review before you submit</h2>
 <div id="review"></div>
 </div>
-<p data-payments-soon class="notice">Payments opening soon — submitting joins the list for this packet at $59. No card is taken today; we email the payment link when checkout opens.</p>
-<p data-payments-live style="display:none" class="notice">Submitting saves the intake and takes you to secure card checkout for $59. The packet starts once payment is confirmed.</p>
+<p data-payments-soon class="notice" id="notice-soon">Payments opening soon — submitting joins the list for this packet at $59. No card is taken today; we email the payment link when checkout opens.</p>
+<p data-payments-live style="display:none" class="notice" id="notice-live">Submitting saves the intake and takes you to secure card checkout for $59. The packet starts once payment is confirmed.</p>
 <label class="check"><input type="checkbox" id="truthful"> <span>I confirm the requirements and document details submitted are accurate to the best of my knowledge, and I understand the final hire/start decision is mine. <span class="req">*</span></span></label>
 <p class="err" id="err-truthful"></p>
 <div class="stepnav"><button class="btn ghost" type="button" data-back>Back</button><button class="btn brand" type="submit" id="submit-btn">Submit intake</button></div>
@@ -133,6 +139,39 @@ function need(id, msgText){
   if (!v(id)) { markErr(id, msgText); return false; }
   markErr(id, ""); return true;
 }
+/* ---------- product choice ---------- */
+function selectedProduct(){
+  var el = document.querySelector("input[name='product_choice']:checked");
+  return Platform.productById(el ? el.value : "full");
+}
+function syncProduct(){
+  var p = selectedProduct();
+  document.getElementById("order-h1").textContent = p.id === "quickcheck"
+    ? "Paperwork QuickCheck intake — $10"
+    : "Subcontractor readiness intake — one sub, $59";
+  var soon = document.getElementById("notice-soon"), live = document.getElementById("notice-live");
+  if (soon && live) {
+    if (Platform.paymentsReadyFor(p)) {
+      soon.style.display = "none"; live.style.display = "";
+      live.textContent = "Submitting saves the intake and takes you to secure card checkout for " + p.price_label + ". The check starts once payment is confirmed.";
+    } else {
+      soon.style.display = ""; live.style.display = "none";
+      soon.textContent = "Payments for the " + p.name + " open soon — submitting joins the list at " + p.price_label + ". No card is taken today; we email the payment link when checkout opens.";
+    }
+  }
+  if (current === 3) { buildReview(); }
+}
+document.querySelectorAll("input[name='product_choice']").forEach(function(r){
+  r.addEventListener("change", syncProduct);
+});
+(function(){
+  var q = new URLSearchParams(window.location.search).get("product");
+  if (q) {
+    var r = document.querySelector("input[name='product_choice'][value='" + q + "']");
+    if (r) { r.checked = true; }
+  }
+})();
+
 var current = 1;
 function showStep(n){
   current = n;
@@ -193,7 +232,7 @@ function buildReview(){
     row("WSIB clearance", docSummary("doc_wsib_have", "doc_wsib_detail", "doc_wsib_status")) +
     row("Documents note", v("docs_note")) +
     "</table>" +
-    "<p class='fine' style='margin-top:12px'>Price: CAD $59, one-off, for one subcontractor on one project. Standard turnaround 2 business days from a complete submission.</p>";
+    "<p class='fine' style='margin-top:12px'>Service: " + esc(selectedProduct().name) + " — CAD $" + selectedProduct().price_cad + ", one-off" + (selectedProduct().id === "quickcheck" ? "." : ", for one subcontractor on one project.") + " Standard turnaround 2 business days from a complete submission.</p>";
   document.getElementById("review").innerHTML = html;
 }
 function shortRef(id){ return String(id || "").replace(/[^a-zA-Z0-9]/g, "").slice(0, 8).toUpperCase(); }
@@ -236,10 +275,10 @@ document.getElementById("intake").addEventListener("submit", async function(e){
   var btn = document.getElementById("submit-btn");
   btn.disabled = true; msg.textContent = "Saving your intake…"; msg.className = "msg";
   try {
-    var order = await Platform.createOrder(intake);
-    if (Platform.paymentsReady) {
+    var order = await Platform.createOrder(intake, selectedProduct().id);
+    if (Platform.paymentsReadyFor(selectedProduct())) {
       msg.textContent = "Intake saved. Taking you to secure checkout…";
-      if (Platform.checkout(order.id)) { return; }
+      if (Platform.checkout(order.id, order)) { return; }
       showSuccess(order, "payment");
     } else {
       showSuccess(order, "waitlist");
@@ -254,7 +293,7 @@ function showSuccess(order, kind){
   var box = document.getElementById("success");
   var statusUrl = "status.html?id=" + encodeURIComponent(order.id);
   var next = kind === "waitlist"
-    ? "<p>You are on the list for this packet at $59. No card has been taken. When checkout opens, we email the payment link to <strong>" + esc(v("contact_email")) + "</strong>, and the packet starts once payment is confirmed.</p>"
+    ? "<p>You are on the list for " + esc(order.product) + " at $" + esc(order.price_cad) + ". No card has been taken. When checkout opens, we email the payment link to <strong>" + esc(v("contact_email")) + "</strong>, and the check starts once payment is confirmed.</p>"
     : "<p>Your intake is saved and marked as awaiting payment. If checkout did not open, use the Pay button on the status page.</p>";
   box.innerHTML = "<div class='success'><p class='sec-label'>Intake received</p>" +
     "<h2>Order reference <span class='refcode'>" + shortRef(order.id) + "</span></h2>" +
@@ -271,5 +310,6 @@ function showSuccess(order, kind){
   box.style.display = "";
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
+syncProduct();
 </script>
 </body></html>
