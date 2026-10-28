@@ -33,7 +33,7 @@
 <div id="box"><p class="fine">Enter an order ID above, or open one from your <a href="dashboard.html">dashboard</a>. You can only view your own orders.</p></div>
 
 <p data-payments-soon class="notice">Payments opening soon — orders submitted now are on the waitlist and no card has been charged.</p>
-<p><button class="btn brand" id="pay-btn" style="display:none">Pay $59 securely</button></p>
+<p><button class="btn brand" id="pay-btn" style="display:none">Pay securely</button></p>
 <p id="report-slot"></p>
 <div id="ai-slot"></div>
 <p class="fine">Questions about a packet: email <a href="mailto:rufat.baghirov97@gmail.com">rufat.baghirov97@gmail.com</a> with your order ID. A dated document-readiness check — not insurance advice or a coverage guarantee. A certificate alone is not independently verified coverage.</p>
@@ -68,7 +68,7 @@ function timeline(o){
   var stage = 1, midNote = "";
   if (s === "waitlist") { stage = 1; midNote = "On the list. When checkout opens, we email your payment link and the packet starts once payment is confirmed."; }
   else if (s === "pending_payment") { stage = 1; midNote = "Waiting for payment. Use the Pay button below; the packet starts once payment is confirmed."; }
-  else if (s === "paid") { stage = 2; midNote = "Payment confirmed. Your packet is queued."; }
+  else if (s === "paid") { stage: 2; midNote = "Payment confirmed. Your packet is queued."; }
   else if (s === "in_review") { stage = 2; midNote = "The documents are being compared with your contract requirements, item by item."; }
   else if (s === "needs_info") { stage = 2; midNote = "Documents or facts are outstanding. We emailed you exactly what is missing."; }
   else if (s === "report_ready") { stage = 3; }
@@ -110,21 +110,17 @@ document.getElementById("lookup").addEventListener("submit", function(e){
       document.getElementById("report-slot").innerHTML =
         "<a class='btn brand' href='" + esc(o.report_url) + "'>Open your readiness packet</a>";
     }
-    if (Platform.paymentsReady && o.status === "pending_payment") {
+    var prod = Platform.productForOrder(o);
+    if (prod && Platform.paymentsReadyFor(prod) && o.status === "pending_payment") {
       var b = document.getElementById("pay-btn");
+      b.textContent = "Pay $" + o.price_cad + " securely";
       b.style.display = "";
-      b.addEventListener("click", function(){ Platform.checkout(o.id); });
+      b.addEventListener("click", function(){ Platform.checkout(o.id, o); });
     }
   } catch (e) { box.innerHTML = '<p class="fine">Could not load this order: ' + esc(e.message) + "</p>"; }
 })();
 </script>
 <script>
-/* ---- AI deep report (SubReady) ------------------------------------
-   Renders orders.ai_report, or calls the generate-report Edge Function
-   (DeepSeek) via supabase.functions.invoke. app.js does not expose its
-   Supabase client, so a second client is created from the same public
-   config — same project URL means the same stored session is used.
-   In preview mode (no live backend) the section stays hidden. */
 (function(){
   var slot = document.getElementById("ai-slot");
   var id = new URLSearchParams(window.location.search).get("id");
@@ -251,7 +247,7 @@ document.getElementById("lookup").addEventListener("submit", function(e){
       if (st === "ready" && o.ai_report) { showReport(o.ai_report); }
       else if (st === "generating") { showGenerating(); }
       else { showGenerate(st); }
-    } catch (e) { /* order not viewable (signed out / not owner) — the main panel already explains */ }
+    } catch (e) {}
   })();
 })();
 </script>
