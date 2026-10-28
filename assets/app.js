@@ -16,6 +16,32 @@
     sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
   }
 
+  /* ---------- products ---------- */
+  // config.js defines PRODUCTS (id, name, price_cad, price_label,
+  // stripe_link); the first entry is the full product. When PRODUCTS is
+  // absent, the legacy single-product fields are treated as that one
+  // product. `paymentsReady` above stays the full product's link state
+  // (page chrome); per-product checks use paymentsReadyFor().
+  function products() {
+    if (cfg.PRODUCTS && cfg.PRODUCTS.length) { return cfg.PRODUCTS; }
+    return [{ id: "full", name: cfg.PRODUCT_NAME, price_cad: cfg.PRICE_CAD, price_label: cfg.PRICE_LABEL, stripe_link: cfg.STRIPE_PAYMENT_LINK }];
+  }
+  function productById(id) {
+    var list = products();
+    for (var i = 0; i < list.length; i++) { if (list[i].id === id) { return list[i]; } }
+    return list[0];
+  }
+  // Orders store the product name and price, so match on those (name
+  // first, then price) to find which product an existing order is for.
+  function productForOrder(order) {
+    var list = products(), i;
+    if (!order) { return list[0]; }
+    for (i = 0; i < list.length; i++) { if (list[i].name === order.product) { return list[i]; } }
+    for (i = 0; i < list.length; i++) { if (Number(list[i].price_cad) === Number(order.price_cad)) { return list[i]; } }
+    return list[0];
+  }
+  function paymentsReadyFor(product) { return !!product && !isPlaceholder(product.stripe_link); }
+
   /* ---------- preview-mode local store ---------- */
   var LS_ORDERS = "sr_preview_orders";
   function lsOrders() { try { return JSON.parse(localStorage.getItem(LS_ORDERS)) || []; } catch (e) { return []; } }
@@ -45,10 +71,11 @@
   }
 
   /* ---------- orders ---------- */
-  async function createOrder(intake) {
+  async function createOrder(intake, productId) {
+    var product = productById(productId);
     var row = {
-      product: cfg.PRODUCT_NAME, price_cad: cfg.PRICE_CAD, currency: "CAD",
-      status: paymentsReady ? "pending_payment" : "waitlist",
+      product: product.name, price_cad: product.price_cad, currency: "CAD",
+      status: paymentsReadyFor(product) ? "pending_payment" : "waitlist",
       intake: intake
     };
     if (sb) {
@@ -83,9 +110,10 @@
   /* ---------- checkout ---------- */
   // Returns true if it redirected to Stripe; false if the caller should
   // show the "payments opening soon — join the list" state instead.
-  function checkout(orderId) {
-    if (!paymentsReady) { return false; }
-    var url = cfg.STRIPE_PAYMENT_LINK;
+  function checkout(orderId, order) {
+    var product = order ? productForOrder(order) : productById();
+    if (!paymentsReadyFor(product)) { return false; }
+    var url = product.stripe_link;
     // Lets Stripe pre-fill the buyer's email and lets us reconcile the
     // payment to the order later via the client_reference_id.
     url += (url.indexOf("?") === -1 ? "?" : "&") + "client_reference_id=" + encodeURIComponent(orderId || "");
@@ -111,6 +139,8 @@
 
   window.Platform = {
     cfg: cfg, supabaseReady: supabaseReady, paymentsReady: paymentsReady,
+    products: products, productById: productById, productForOrder: productForOrder,
+    paymentsReadyFor: paymentsReadyFor,
     currentUser: currentUser, signUp: signUp, signIn: signIn, signOut: signOut,
     createOrder: createOrder, listOrders: listOrders, getOrder: getOrder, checkout: checkout
   };
